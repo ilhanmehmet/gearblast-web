@@ -7,28 +7,27 @@
     <style>
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #000022;
+            overflow: hidden; background-color: #000015;
             font-family: 'Segoe UI', sans-serif; color: white;
         }
 
-        /* Galaksi Derinliği */
+        /* Galaksi ve Uzay Derinliği */
         .galaxy-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #000044 0%, #000011 100%);
+            background: radial-gradient(circle at center, #000033 0%, #000008 100%);
             z-index: -2;
         }
 
-        /* Uzay Tozu */
         .stars {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://www.transparenttextures.com/patterns/stardust.png');
-            opacity: 0.2; z-index: -1;
+            opacity: 0.15; z-index: -1;
         }
 
         #gearCanvas {
             position: fixed; top: 0; left: 0;
-            filter: blur(8px); /* Hafif flu, derinlik katar */
-            opacity: 0.45; z-index: 0;
+            filter: blur(10px); /* Derinlik için flu */
+            opacity: 0.35; z-index: 0;
         }
 
         .container {
@@ -38,32 +37,31 @@
         }
 
         .logo {
-            max-width: 300px; width: 75%; height: auto;
-            margin-bottom: 25px; filter: drop-shadow(0 0 25px rgba(255,204,0,0.3));
-            animation: float 5s ease-in-out infinite;
+            max-width: 270px; width: 70%; height: auto;
+            margin-bottom: 20px; filter: drop-shadow(0 0 25px rgba(255,204,0,0.3));
+            animation: floatLogo 6s ease-in-out infinite;
         }
 
         h1 {
-            font-size: 3.5rem; margin: 10px 0; color: #ffcc00;
-            text-transform: uppercase; letter-spacing: 5px;
-            text-shadow: 0 0 20px rgba(0,0,0,1);
+            font-size: 3.2rem; margin: 10px 0; color: #ffcc00;
+            text-transform: uppercase; letter-spacing: 6px;
+            text-shadow: 0 0 25px rgba(0,0,0,1);
         }
 
         .status {
             background-color: #28a745; color: white;
-            padding: 8px 25px; border-radius: 30px;
+            padding: 7px 22px; border-radius: 30px;
             font-weight: bold; text-transform: uppercase;
-            font-size: 0.8rem; box-shadow: 0 0 15px rgba(40,167,69,0.5);
+            font-size: 0.75rem; box-shadow: 0 0 15px rgba(40,167,69,0.4);
         }
 
-        p { font-size: 1.4rem; max-width: 500px; margin: 20px; color: #f0f0f0; }
+        p { font-size: 1.3rem; max-width: 480px; margin: 20px; color: #d0d0d0; }
 
-        .footer { position: absolute; bottom: 30px; font-size: 1rem; color: #777; }
+        .footer { position: absolute; bottom: 30px; font-size: 0.9rem; color: #666; }
 
-        /* Yerçekimsiz Süzülme Efekti */
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-25px) rotate(2deg); }
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
     </style>
 </head>
@@ -76,7 +74,7 @@
         <img src="logo_icon.png" alt="Gear Blast" class="logo">
         <div class="status">Official Release</div>
         <h1>Gear Blast</h1>
-        <p>Master the ultimate block puzzle challenge.<br><strong>Available now on Google Play Store</strong></p>
+        <p>Master the ultimate block puzzle challenge.<br><strong>Available on Google Play Store</strong></p>
         <div class="footer">Developed by <strong>İlhan Mehmet Altuntaş</strong></div>
     </div>
 
@@ -84,7 +82,6 @@
         const canvas = document.getElementById('gearCanvas');
         const ctx = canvas.getContext('2d');
         let gears = [];
-        // 8 Farklı Kozmik Renk
         const colors = ['#ffcc00', '#ff3300', '#00ccff', '#cc00ff', '#33ff00', '#ffffff', '#ff0066', '#00ffcc'];
 
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -95,47 +92,40 @@
             constructor(i) {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                // Büyüklü küçüklü yapı
-                this.size = Math.random() * 70 + 30; 
-                // Çok yavaş yerçekimsiz süzülme hızı
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.speedY = (Math.random() - 0.5) * 0.3;
+                // Çarklar daha küçük hale getirildi
+                this.size = Math.random() * 40 + 20; 
+                // İnanılmaz yavaş süzülme (neredeyse duruyor gibi)
+                this.speedX = (Math.random() - 0.5) * 0.15;
+                this.speedY = (Math.random() - 0.5) * 0.15;
                 this.angle = Math.random() * Math.PI * 2;
-                // Çok yavaş dönme hızı
-                this.rot = (Math.random() - 0.5) * 0.01; 
-                this.color = colors[i];
-                this.teeth = 8; // Tam 8 dişli
+                // İnanılmaz yavaş dönme hızı
+                this.rot = (Math.random() - 0.5) * 0.004; 
+                this.color = colors[i % 8];
             }
             draw() {
                 ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle);
                 ctx.fillStyle = this.color;
-                
-                // 8 Dişli Çizimi
-                for(let i=0; i<this.teeth; i++) {
-                    ctx.rotate(Math.PI / (this.teeth / 2));
-                    ctx.fillRect(this.size * 0.75, -this.size * 0.12, this.size * 0.4, this.size * 0.24);
+                // Tam 8 dişli mekanizması
+                for(let i=0; i<8; i++) {
+                    ctx.rotate(Math.PI / 4);
+                    ctx.fillRect(this.size * 0.75, -this.size * 0.12, this.size * 0.45, this.size * 0.24);
                 }
-                
-                // Ana Gövde
                 ctx.beginPath(); ctx.arc(0, 0, this.size * 0.85, 0, Math.PI * 2); ctx.fill();
-                
-                // Göbek Boşluğu
                 ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath(); ctx.arc(0, 0, this.size * 0.35, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(0, 0, this.size * 0.4, 0, Math.PI * 2); ctx.fill();
                 ctx.restore();
             }
             update() {
                 this.x += this.speedX; this.y += this.speedY; this.angle += this.rot;
-                // Ekrandan çıkınca diğer taraftan yavaşça girme
-                if(this.x < -150) this.x = canvas.width + 150;
-                if(this.x > canvas.width + 150) this.x = -150;
-                if(this.y < -150) this.y = canvas.height + 150;
-                if(this.y > canvas.height + 150) this.y = -150;
+                if(this.x < -100) this.x = canvas.width + 100;
+                if(this.x > canvas.width + 100) this.x = -100;
+                if(this.y < -100) this.y = canvas.height + 100;
+                if(this.y > canvas.height + 100) this.y = -100;
             }
         }
 
-        // 12 adet çark (Daha sık ama boğucu değil)
-        for(let i=0; i<12; i++) gears.push(new Gear(i % 8));
+        // Toplam 16 adet küçük çark (Ekran geneline daha homojen dağılım)
+        for(let i=0; i<16; i++) gears.push(new Gear(i));
 
         function anim() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
