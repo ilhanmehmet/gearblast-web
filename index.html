@@ -5,91 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gear Blast | Official Developer Site</title>
     <style>
-        /* Global Styles */
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000033; /* Space Navy Blue */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #000022;
+            font-family: 'Segoe UI', sans-serif; color: white;
         }
 
-        /* Animated Gear Background Canvas */
+        /* Galaksi Atmosferi Efekti */
+        .galaxy-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #000044 0%, #000011 100%);
+            z-index: -2;
+        }
+
+        /* Yıldız Tozu Efekti */
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.3; z-index: -1;
+        }
+
         #gearCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            filter: blur(6px); /* Blurry effect for depth */
-            opacity: 0.5;
+            position: fixed; top: 0; left: 0;
+            filter: blur(12px); /* Ekstra flu dişliler */
+            opacity: 0.4; z-index: 0;
         }
 
-        /* Main Content UI */
         .container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            z-index: 10;
-            background: radial-gradient(circle, rgba(0,0,51,0) 0%, rgba(0,0,51,0.8) 100%);
+            position: relative; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100vh; text-align: center; z-index: 10;
         }
 
-        /* Floating Logo Styling */
         .logo {
-            max-width: 280px;
-            width: 75%;
-            height: auto;
-            margin-bottom: 25px;
-            filter: drop-shadow(0 0 20px rgba(255,204,0,0.4));
+            max-width: 280px; width: 70%; height: auto;
+            margin-bottom: 25px; filter: drop-shadow(0 0 20px rgba(255,204,0,0.4));
             animation: float 4s ease-in-out infinite;
         }
 
         h1 {
-            font-size: 3.5rem;
-            margin: 10px 0;
-            color: #ffcc00; /* Gear Gold */
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            font-size: 3.5rem; margin: 10px 0; color: #ffcc00;
+            text-transform: uppercase; letter-spacing: 5px;
+            text-shadow: 0 0 20px rgba(0,0,0,1);
         }
 
         .status {
-            background-color: #28a745;
-            color: white;
-            padding: 8px 24px;
-            border-radius: 30px;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(40, 167, 69, 0.5);
-            margin-bottom: 15px;
+            background-color: #28a745; color: white;
+            padding: 8px 25px; border-radius: 30px;
+            font-weight: bold; text-transform: uppercase;
+            font-size: 0.8rem; box-shadow: 0 0 15px rgba(40,167,69,0.5);
         }
 
-        p {
-            font-size: 1.4rem;
-            max-width: 550px;
-            line-height: 1.6;
-            margin: 20px;
-            color: #f0f0f0;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
-        }
+        p { font-size: 1.4rem; max-width: 500px; margin: 20px; color: #ccc; }
 
-        .footer {
-            position: absolute;
-            bottom: 40px;
-            font-size: 1.1rem;
-            color: #999;
-            letter-spacing: 1px;
-        }
+        .footer { position: absolute; bottom: 30px; font-size: 1rem; color: #777; }
 
-        /* Floating Animation */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
@@ -97,103 +67,66 @@
     </style>
 </head>
 <body>
-
+    <div class="galaxy-bg"></div>
+    <div class="stars"></div>
     <canvas id="gearCanvas"></canvas>
 
     <div class="container">
-        <img src="logo_icon.png" alt="Gear Blast Logo" class="logo">
-        
+        <img src="logo_icon.png" alt="Gear Blast" class="logo">
         <div class="status">Official Release</div>
-        
         <h1>Gear Blast</h1>
-        
-        <p>Experience the ultimate block puzzle challenge. <br> <strong>Available now on Google Play Store!</strong></p>
-        
-        <div class="footer">
-            Developed by <strong>İlhan Mehmet Altuntaş</strong>
-        </div>
+        <p>Master the ultimate block puzzle challenge.<br><strong>Available on Google Play Store</strong></p>
+        <div class="footer">Developed by <strong>İlhan Mehmet Altuntaş</strong></div>
     </div>
 
     <script>
         const canvas = document.getElementById('gearCanvas');
         const ctx = canvas.getContext('2d');
-
         let gears = [];
-        const gearCount = 8;
-        // 8 Different Colors for the gears
         const colors = ['#ffcc00', '#ff3300', '#00ccff', '#cc00ff', '#33ff00', '#ffffff', '#ff0066', '#00ffcc'];
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
 
         class Gear {
-            constructor(index) {
+            constructor(i) {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 60 + 50;
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.size = Math.random() * 80 + 60;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
                 this.angle = 0;
-                this.rotationSpeed = (Math.random() - 0.5) * 0.015;
-                this.color = colors[index];
-                this.teeth = 10;
+                this.rot = (Math.random() - 0.5) * 0.02;
+                this.color = colors[i];
             }
-
             draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle);
+                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle);
                 ctx.fillStyle = this.color;
-                
-                // Draw Teeth
-                for (let i = 0; i < this.teeth; i++) {
-                    ctx.rotate(Math.PI / (this.teeth / 2));
-                    ctx.fillRect(this.size * 0.75, -this.size * 0.15, this.size * 0.45, this.size * 0.3);
+                for(let i=0; i<10; i++) {
+                    ctx.rotate(Math.PI/5);
+                    ctx.fillRect(this.size*0.7, -this.size*0.15, this.size*0.4, this.size*0.3);
                 }
-
-                // Draw Main Body
-                ctx.beginPath();
-                ctx.arc(0, 0, this.size * 0.85, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Punch out the center hole
+                ctx.beginPath(); ctx.arc(0,0,this.size*0.8,0,Math.PI*2); ctx.fill();
                 ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath();
-                ctx.arc(0, 0, this.size * 0.4, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(0,0,this.size*0.35,0,Math.PI*2); ctx.fill();
                 ctx.restore();
             }
-
             update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.angle += this.rotationSpeed;
-
-                // Wrap around screen
-                if (this.x < -150) this.x = canvas.width + 150;
-                if (this.x > canvas.width + 150) this.x = -150;
-                if (this.y < -150) this.y = canvas.height + 150;
-                if (this.y > canvas.height + 150) this.y = -150;
+                this.x += this.speedX; this.y += this.speedY; this.angle += this.rot;
+                if(this.x < -150) this.x = canvas.width + 150;
+                if(this.x > canvas.width + 150) this.x = -150;
+                if(this.y < -150) this.y = canvas.height + 150;
+                if(this.y > canvas.height + 150) this.y = -150;
             }
         }
-
-        for (let i = 0; i < gearCount; i++) {
-            gears.push(new Gear(i));
+        for(let i=0; i<8; i++) gears.push(new Gear(i));
+        function anim() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            gears.forEach(g => { g.update(); g.draw(); });
+            requestAnimationFrame(anim);
         }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            gears.forEach(gear => {
-                gear.update();
-                gear.draw();
-            });
-            requestAnimationFrame(animate);
-        }
-        animate();
+        anim();
     </script>
 </body>
 </html>
