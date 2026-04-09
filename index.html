@@ -5,58 +5,187 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gear Blast | Official Developer Site</title>
     <style>
-        body {
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background-color: #000033; /* Space Navy Blue */
+            font-family: 'Segoe UI', Arial, sans-serif;
             color: white;
-            font-family: Arial, sans-serif;
+        }
+
+        /* Dinamik Arka Plan Kanvası */
+        #gearCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            filter: blur(4px); /* Dişlileri flu yapar */
+            opacity: 0.6;
+        }
+
+        .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            margin: 0;
             text-align: center;
+            background: radial-gradient(circle, rgba(0,0,51,0) 0%, rgba(0,0,51,0.8) 100%);
+            z-index: 1;
         }
+
+        /* Logo Ayarı */
+        .logo {
+            max-width: 260px;
+            width: 80%;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px rgba(255,204,0,0.3));
+            animation: float 4s ease-in-out infinite;
+        }
+
         h1 {
             font-size: 3.5rem;
-            margin-bottom: 10px;
+            margin: 10px 0;
             color: #ffcc00; /* Gear Gold */
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
-        p {
-            font-size: 1.4rem;
-            max-width: 600px;
-            line-height: 1.6;
-        }
+
         .status {
             background-color: #28a745;
             color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
+            padding: 8px 25px;
+            border-radius: 30px;
             font-weight: bold;
-            margin-bottom: 20px;
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(40, 167, 69, 0.4);
         }
+
+        p {
+            font-size: 1.3rem;
+            max-width: 500px;
+            line-height: 1.6;
+            margin: 20px;
+            color: #e0e0e0;
+        }
+
         .footer {
-            margin-top: 50px;
-            font-size: 1.1rem;
-            color: #aaaaaa;
+            position: absolute;
+            bottom: 30px;
+            font-size: 1rem;
+            color: #888;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body>
 
-    <div class="status">Official Release</div>
-    
-    <h1>Gear Blast</h1>
-    
-    <p>Experience the ultimate block puzzle challenge. <br> Download now on Google Play Store!</p>
-    
-    <div class="footer">
-        Developed by <strong>İlhan Mehmet Altuntaş</strong>
+    <canvas id="gearCanvas"></canvas>
+
+    <div class="container">
+        <img src="logo_icon.png" alt="Gear Blast Logo" class="logo">
+        
+        <div class="status">Official Release</div>
+        
+        <h1>Gear Blast</h1>
+        
+        <p>Experience the ultimate block puzzle challenge. <br> <strong>Download now on Google Play Store!</strong></p>
+        
+        <div class="footer">
+            Developed by <strong>İlhan Mehmet Altuntaş</strong>
+        </div>
     </div>
 
+    <script>
+        const canvas = document.getElementById('gearCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let gears = [];
+        const gearCount = 8;
+        const colors = ['#ffcc00', '#ff3300', '#00ccff', '#cc00ff', '#33ff00', '#ffffff', '#ff0066', '#ff9900'];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Gear {
+            constructor(index) {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 60 + 40;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.angle = 0;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+                this.color = colors[index];
+                this.teeth = 8;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.beginPath();
+                ctx.fillStyle = this.color;
+                
+                for (let i = 0; i < this.teeth; i++) {
+                    ctx.rotate(Math.PI / (this.teeth / 2));
+                    ctx.rect(this.size * 0.8, -this.size * 0.15, this.size * 0.4, this.size * 0.3);
+                }
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size * 0.9, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.angle += this.rotationSpeed;
+
+                if (this.x < -this.size * 2) this.x = canvas.width + this.size * 2;
+                if (this.x > canvas.width + this.size * 2) this.x = -this.size * 2;
+                if (this.y < -this.size * 2) this.y = canvas.height + this.size * 2;
+                if (this.y > canvas.height + this.size * 2) this.y = -this.size * 2;
+            }
+        }
+
+        for (let i = 0; i < gearCount; i++) {
+            gears.push(new Gear(i));
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            gears.forEach(gear => {
+                gear.update();
+                gear.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
 </body>
 </html>
