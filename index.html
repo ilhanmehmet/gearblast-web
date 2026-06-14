@@ -1,154 +1,1227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gear Blast : Block Puzzle | Official Developer Site</title>
-    <style>
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #000008; /* Daha karanlık uzay */
-            font-family: 'Segoe UI', sans-serif; color: white;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gear Blast: Block Puzzle | Official Player Guide & Dev Site</title>
+<meta name="description" content="Gear Blast puzzle oyununun resmi oyuncu rehberi, kuralları, oyun modları, ligler, başarımlar ve sıkça sorulan sorular.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:          #040a16;
+    --bg-gradient: radial-gradient(circle at 50% 50%, #0d1e36 0%, #040a16 100%);
+    --panel:       rgba(26, 45, 71, 0.45);
+    --panel-hover: rgba(26, 45, 71, 0.65);
+    --border:      rgba(74, 184, 240, 0.2);
+    --border-hover:rgba(74, 184, 240, 0.4);
+    --text:        #e8f2ff;
+    --text-muted:  #8aadcc;
+    --accent:      #f0a030;
+    --accent-glow: rgba(240, 160, 48, 0.25);
+    --blue:        #4ab8f0;
+    --blue-glow:   rgba(74, 184, 240, 0.3);
+    --green:       #3de870;
+    --green-glow:  rgba(61, 232, 112, 0.25);
+    --red:         #ff4a4a;
+    --red-glow:    rgba(255, 74, 74, 0.3);
+    --gold:        #ffd700;
+    --radius-lg:   20px;
+    --radius-md:   12px;
+    --transition:  all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-        /* Galaksi ve Sonsuz Derinlik */
-        .galaxy-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #000022 0%, #000005 100%);
-            z-index: -2;
-        }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+  }
 
-        .stars {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/stardust.png');
-            opacity: 0.12; z-index: -1;
-        }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
 
-        /* Çarklar Çok Daha Uzakta (Küçük ve Flu) */
-        #gearCanvas {
-            position: fixed; top: 0; left: 0;
-            filter: blur(14px); /* Derinlik için ekstra flu */
-            opacity: 0.3; z-index: 0;
-        }
+  /* ─── GALAXY BG & CANVAS ─── */
+  .galaxy-bg {
+    position: fixed; inset: 0;
+    background: var(--bg-gradient);
+    z-index: -3;
+  }
+  .stars {
+    position: fixed; inset: 0;
+    background: url('https://www.transparenttextures.com/patterns/stardust.png');
+    opacity: 0.08; z-index: -2;
+  }
+  #gearCanvas {
+    position: fixed; inset: 0;
+    filter: blur(8px);
+    opacity: 0.15; z-index: -1;
+    pointer-events: none;
+  }
 
-        .container {
-            position: relative; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            height: 100vh; text-align: center; z-index: 10;
-        }
+  /* ─── CONTAINER ─── */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    position: relative;
+    z-index: 10;
+  }
 
-        .logo {
-            max-width: 260px; width: 65%; height: auto;
-            margin-bottom: 25px; filter: drop-shadow(0 0 25px rgba(255,204,0,0.3));
-            animation: floatLogo 7s ease-in-out infinite;
-        }
+  /* ─── STICKY HEADER ─── */
+  header.nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .dev-badge {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .lang-switcher {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px;
+    padding: 3px;
+    position: relative;
+    cursor: pointer;
+  }
+  .lang-btn {
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 20px;
+    color: var(--text-muted);
+    transition: var(--transition);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  .lang-btn.active {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 0 12px var(--blue-glow);
+  }
 
-        h1 {
-            font-size: 3.2rem; margin: 10px 0; color: #ffcc00;
-            text-transform: uppercase; letter-spacing: 5px;
-            text-shadow: 0 0 25px rgba(0,0,0,1);
-        }
+  /* ─── HERO SECTION ─── */
+  .hero {
+    text-align: center;
+    padding: 60px 0 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .logo {
+    max-width: 200px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(74, 184, 240, 0.4));
+    animation: floatLogo 6s ease-in-out infinite;
+    margin-bottom: 24px;
+  }
+  @keyframes floatLogo {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #fff 30%, var(--blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .hero h2 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--accent) 0%, #d87c10 100%);
+    border: none;
+    color: #fff;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 0 20px var(--accent-glow);
+    transition: var(--transition);
+    text-decoration: none;
+  }
+  .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(240, 160, 48, 0.5);
+  }
 
-        /* Block Puzzle Alt Başlığı */
-        h2 {
-            font-size: 1.6rem; margin: -5px 0 20px 0; color: #f0f0f0;
-            font-weight: normal; letter-spacing: 2px;
-            text-shadow: 0 0 15px rgba(0,0,0,0.8);
-        }
+  /* ─── TABLE OF CONTENTS (İÇİNDEKİLER) ─── */
+  .toc-container {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  .toc-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toc-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  .toc-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: var(--transition);
+  }
+  .toc-link:hover {
+    color: #fff;
+    border-color: var(--blue);
+    background: rgba(74, 184, 240, 0.08);
+    transform: translateX(4px);
+  }
 
-        .status {
-            background-color: #28a745; color: white;
-            padding: 7px 20px; border-radius: 30px;
-            font-weight: bold; text-transform: uppercase;
-            font-size: 0.75rem; box-shadow: 0 0 15px rgba(40,167,69,0.4);
-        }
+  /* ─── PLAYER GUIDE SECTIONS ─── */
+  .guide-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    margin-bottom: 35px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    transition: var(--transition);
+  }
+  .guide-section:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 15px 40px rgba(74, 184, 240, 0.08);
+  }
+  .guide-section h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--blue);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(74, 184, 240, 0.15);
+    padding-bottom: 10px;
+  }
+  .guide-section h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 22px 0 12px;
+  }
+  .guide-section p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+  .guide-section ul, .guide-section ol {
+    list-style: none;
+    margin-bottom: 16px;
+  }
+  .guide-section li {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.6;
+  }
+  .guide-section li strong {
+    color: var(--text);
+  }
+  .guide-section .icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
 
-        p { font-size: 1.3rem; max-width: 500px; margin: 20px; color: #cccccc; }
+  /* ─── WARN/HIGHLIGHT CARDS ─── */
+  .alert-card {
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin: 20px 0;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    border-left: 4px solid;
+  }
+  .alert-card.danger {
+    background: rgba(255, 74, 74, 0.06);
+    border-color: var(--red);
+    box-shadow: 0 0 20px rgba(255, 74, 74, 0.05);
+  }
+  .alert-card.warning {
+    background: rgba(240, 160, 48, 0.06);
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(240, 160, 48, 0.05);
+  }
+  .alert-card.danger .alert-title {
+    color: var(--red);
+    font-weight: 800;
+  }
+  .alert-card.warning .alert-title {
+    color: var(--accent);
+    font-weight: 800;
+  }
+  .alert-card .alert-title {
+    font-size: 1rem;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .alert-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
 
-        .footer { position: absolute; bottom: 30px; font-size: 0.9rem; color: #666; }
+  /* ─── ACCORDION (FAQ / SSS) ─── */
+  .accordion-group {
+    margin-bottom: 15px;
+  }
+  .accordion-category-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 25px 0 12px;
+    padding-left: 8px;
+    border-left: 3px solid var(--blue);
+  }
+  .accordion-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: var(--radius-md);
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: var(--transition);
+  }
+  .accordion-item:hover {
+    border-color: var(--border);
+    background: rgba(255,255,255,0.03);
+  }
+  .accordion-header {
+    width: 100%;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+  }
+  .accordion-header .arrow {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    transition: transform 0.3s;
+  }
+  .accordion-item.active .accordion-header .arrow {
+    transform: rotate(180deg);
+    color: var(--blue);
+  }
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.35s ease-out, opacity 0.3s ease-out;
+  }
+  .accordion-item.active .accordion-content {
+    opacity: 1;
+  }
+  .accordion-content p {
+    padding: 0 20px 18px;
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
 
-        @keyframes floatLogo {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-    </style>
+  /* ─── TABLES ─── */
+  .styled-table-wrap {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+  }
+  table.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+  }
+  table.styled-table th {
+    background: rgba(74, 184, 240, 0.1);
+    color: var(--blue);
+    font-weight: 700;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  table.styled-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-muted);
+  }
+  table.styled-table tr:last-child td {
+    border-bottom: none;
+  }
+  table.styled-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+    color: var(--text);
+  }
+
+  /* ─── GRID CARDS FOR MODES ─── */
+  .grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .grid-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    transition: var(--transition);
+  }
+  .grid-card:hover {
+    border-color: var(--blue);
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-2px);
+  }
+  .grid-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    padding: 40px 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.3);
+  }
+  footer strong {
+    color: var(--text-muted);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2.2rem; }
+    .hero h2 { font-size: 1.1rem; }
+    .guide-section { padding: 20px; }
+    .toc-links { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .toc-links { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
-    <div class="galaxy-bg"></div>
-    <div class="stars"></div>
-    <canvas id="gearCanvas"></canvas>
 
-    <div class="container">
-        <img src="logo_icon.png" alt="Gear Blast" class="logo">
-        <div class="status">Official Release</div>
-        
-        <h1>Gear Blast</h1>
-        <h2>: Block Puzzle</h2>
-        
-        <p>Master the ultimate block puzzle challenge.<br><strong>Available on Google Play Store</strong></p>
-        
-        <div class="footer">Developed by <strong>İlhan Mehmet Altuntaş</strong></div>
+<div class="galaxy-bg"></div>
+<div class="stars"></div>
+<canvas id="gearCanvas"></canvas>
+
+<div class="container">
+
+  <!-- NAVIGATION HEADER -->
+  <header class="nav-header">
+    <span class="dev-badge">İlhan Mehmet Altuntaş</span>
+    <div class="lang-switcher" onclick="toggleLanguage()">
+      <button class="lang-btn active" id="btn-lang-tr">TR</button>
+      <button class="lang-btn" id="btn-lang-en">EN</button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <img src="logo_icon.png" alt="Gear Blast Logo" class="logo">
+    <h1>Gear Blast</h1>
+    <h2>: Block Puzzle</h2>
+    <a href="https://play.google.com/store/apps/details?id=com.ilhanmehmet.gearblast" class="download-btn" id="play-store-btn">
+      <span class="icon">🎮</span>
+      <span id="btn-dl-text">Google Play'den İndir</span>
+    </a>
+  </section>
+
+  <!-- TABLE OF CONTENTS (İÇİNDEKİLER) -->
+  <div class="toc-container">
+    <div class="toc-title">
+      <span class="icon">📖</span>
+      <span id="toc-header-text">İçindekiler / Hızlı Bağlantılar</span>
+    </div>
+    <div class="toc-links">
+      <a href="#how-to-play-sec" class="toc-link">
+        <span class="icon">⚙️</span>
+        <span id="toc-rules-text">Nasıl Oynanır?</span>
+      </a>
+      <a href="#game-modes-sec" class="toc-link">
+        <span class="icon">🎮</span>
+        <span id="toc-modes-text">Oyun Modları</span>
+      </a>
+      <a href="#badges-leagues-sec" class="toc-link">
+        <span class="icon">🎖️</span>
+        <span id="toc-badges-text">Rozetler &amp; Ligler</span>
+      </a>
+      <a href="#challenge-rules-sec" class="toc-link">
+        <span class="icon">⚔️</span>
+        <span id="toc-challenge-text">Meydan Okuma</span>
+      </a>
+      <a href="#faq-sec" class="toc-link">
+        <span class="icon">❓</span>
+        <span id="toc-faq-text">Sık Sorulan Sorular</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ══════════════════ TURKISH CONTENT ══════════════════ -->
+  <div id="content-tr">
+
+    <!-- NASIL OYNANIR -->
+    <div class="guide-section" id="how-to-play-sec">
+      <h2>📖 Gear Blast Nasıl Oynanır?</h2>
+      <p>Gear Blast, renkli dişlilerden oluşanblokları ızgaraya yerleştirerek satır ve sütunları temizlediğiniz, skor topladığınız ve diğer oyuncularla yarıştığınız bir bulmaca oyunudur. Kurallar basit; ustalaşmak ise strateji ister.</p>
+
+      <h3>🎮 Temel Oynanış</h3>
+      <p>Her turda ekranın altında 3 parça görürsünüz. Bir parçayı parmağınızla sürükleyip ızgaraya bırakırsınız. Parça yerleştiğinde:</p>
+      <ul>
+        <li><span class="icon">🔹</span> Tam dolan satır veya sütunlar patlar ve puan kazanırsınız.</li>
+        <li><span class="icon">🔹</span> Aynı hamlede birden fazla satır/sütun temizlerseniz combo oluşur; combo ne kadar yüksekse o hamle o kadar değerli olur.</li>
+        <li><span class="icon">🔹</span> Üç parçayı da yerleştirdiğinizde yeni bir üçlü gelir.</li>
+      </ul>
+      <p>Oyun, ızgaraya hiçbir parça sığmadığında biter. Bu yüzden her hamlede hem puan hem de boş alan düşünmeniz gerekir.</p>
+
+      <h3>🚀 İlk Adımlar</h3>
+      <ul>
+        <li><span class="icon">1️⃣</span> Uygulamayı açın.</li>
+        <li><span class="icon">2️⃣</span> Kullanıcı adınızı ve avatarınızı seçin (skor tablosunda bu isimle görünürsünüz).</li>
+        <li><span class="icon">3️⃣</span> Ana menüden oynamak istediğiniz modu seçin.</li>
+        <li><span class="icon">4️⃣</span> Parçaları sürükleyip bırakarak oynamaya başlayın.</li>
+      </ul>
+
+      <h3>🚀 Oyunu indirdikten sonra ilk açılış</h3>
+      <p>Uygulamayı ilk kez açtığınızda doğrudan ana menüye gitmezsiniz. Önce <strong>hoş geldin ekranı</strong> gelir. Bu ekranda:</p>
+      <ul>
+        <li><span class="icon">🌐</span> Oyun diliniz otomatik seçilir (isterseniz sonra değiştirebilirsiniz).</li>
+        <li><span class="icon">🛡️</span> Gizlilik ve veri kullanımı hakkında kısa bir onay istenir.</li>
+        <li><span class="icon">✍️</span> Kullanıcı adınızı seçersiniz (3–22 karakter; bu isim skor tablosunda görünür).</li>
+        <li><span class="icon">👤</span> Avatarınızı seçersiniz — oyun boyunca sizi temsil eden karakter.</li>
+      </ul>
+      <p>Kayıt tamamlandığında <strong>ana menü</strong> açılır. Bir sonraki açılışlarda doğrudan ana menüye gelirsiniz; tekrar kayıt olmanız gerekmez.</p>
+
+      <h3>🏠 Ana menü — oyunun kalbi</h3>
+      <p>Ana menü, tüm modlara ve özelliklere ulaştığınız merkezdir. Burada şunları görürsünüz:</p>
+      <ul>
+        <li><span class="icon">🎮</span> <strong>Oyun modları:</strong> Macera (bölüm bölüm ilerleme) ve Klasik (Normal veya Zamanlı alt seçenekleri).</li>
+        <li><span class="icon">👤</span> <strong>Üst ve yan alanlar:</strong> Profil kartınız (avatar, kullanıcı adı, undo haklarınız), Skor tablosu (sıralamalar), Arşiv (rozetler, istatistikler, rekabet geçmişi), Mağaza (undo paketleri) ve Ayarlar.</li>
+        <li><span class="icon">✨</span> <strong>Özel alanlar:</strong> Dönen şampiyon bandı (o anki şampiyona meydan okuyabilirsiniz), Meydan okuma girişi (rakip arama) ve reklam bandı (reklamsız paketle kalkar).</li>
+      </ul>
+
+      <h3>📋 Özet Tablo</h3>
+      <div class="styled-table-wrap">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Ne yaparsınız?</th>
+              <th>Sonuç</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Parçayı ızgaraya yerleştirirsiniz</td>
+              <td>Satır/sütun dolarsa patlar, puan alırsınız</td>
+            </tr>
+            <tr>
+              <td>Combo oluşturursunuz</td>
+              <td>Daha yüksek skor</td>
+            </tr>
+            <tr>
+              <td>Modu tamamlarsınız / oyun biter</td>
+              <td>Skor tablosuna yazılır</td>
+            </tr>
+            <tr>
+              <td>Macera bölümü bitirirsiniz</td>
+              <td>Haritada bir sonraki bölüme geçersiniz</td>
+            </tr>
+            <tr>
+              <td>Meydan okumayı kazanırsınız</td>
+              <td>Rakibin skoru size geçer</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Gear Blast’ın özü şudur: doğru yere doğru parçayı koy, alanı yönet, skorunu yükselt, istersen rakiplerine meydan oku. Birkaç tur sonra temel mekanik oturur; asıl keyif mod seçiminde ve yüksek skor peşinde koşarken gelir.</p>
     </div>
 
-    <script>
-        const canvas = document.getElementById('gearCanvas');
-        const ctx = canvas.getContext('2d');
-        let gears = [];
-        const colors = ['#ffcc00', '#ff3300', '#00ccff', '#cc00ff', '#33ff00', '#ffffff', '#ff0066', '#00ffcc'];
+    <!-- OYUN MODLARI -->
+    <div class="guide-section" id="game-modes-sec">
+      <h2>🎮 Dört Oyun Modu</h2>
+      <div class="grid-cards">
+        <div class="grid-card">
+          <div class="grid-card-title">1. Macera Modu</div>
+          <p><strong>3000 bölümlük bir yolculuk.</strong> Her bölümün kendine özel görünümü ve hedefi vardır. Haritadan sıradaki bölüme dokunarak oyuna girersiniz. Amacınız üstteki renk barlarını doldurmak veya engel taşlarını temizlemektir. Süre ve hamle sınırı yoktur. Bölüm bitince zafer animasyonu ve robot koleksiyonu sizi bekler.</p>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-title">2. Klasik Normal Mod</div>
+          <p><strong>Sınırsız skor ve level sistemi.</strong> combo sayacını doldurup buz çerçevesini kırarak level atlarsınız. Level geçtikten sonra 60 saniyelik, ızgaranın hareket ettiği ve skorun 10 kat hızlı arttığı bonus turu teklif edilir. Undo (geri al) hakları bu modda aktiftir.</p>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-title">3. Klasik Zamanlı Mod</div>
+          <p><strong>Sayaç ve süre baskısı.</strong> İlk parçayı tuttuğunuzda zamanlayıcı başlar. Her 3 parçayı bitirdiğinizde süreniz kısmen yenilenir (genelde 3-6 saniye). Süre barı dolmadan veya ızgara kilitlenmeden hamlelerinizi yapmalısınız.</p>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-title">4. Meydan Okuma</div>
+          <p><strong>Aynı oturumda rakibi geçme.</strong> Klasik Normal ve Klasik Zamanlı modlarında oynanır. Ekranda hedef skor ve rakip bilgisi yer alır. Hedef skora ulaştığınız anda kazanırsınız. Kaybederseniz ciddi cezalar alabilirsiniz.</p>
+        </div>
+      </div>
 
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize);
-        resize();
+      <h3>⏸️ Duraklat Menüsü</h3>
+      <p>Oyun ortasında duraklatınca şu seçenekleri görürsünüz:</p>
+      <ul>
+        <li><span class="icon">▶️</span> <strong>Devam:</strong> Oyuna dön.</li>
+        <li><span class="icon">🔄</span> <strong>Yeni Oyun:</strong> Aynı modda sıfırdan başla.</li>
+        <li><span class="icon">⚙️</span> <strong>Ayarlar:</strong> Ses, müzik ve titreşim.</li>
+        <li><span class="icon">🏠</span> <strong>Ana Menü:</strong> Çıkış yap (onay istenir, kayıt silinebilir).</li>
+        <li><span class="icon">🗺️</span> <strong>Harita:</strong> Macera haritasına dön (sadece Macera modunda).</li>
+      </ul>
 
-        class Gear {
-            constructor(i) {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                
-                // ⚙️ Çarklar Çok Daha Küçük (Uzay Boşluğu Derinliği)
-                this.size = Math.random() * 25 + 12; 
-                
-                // ⚙️ Neredeyse Durağan (Çok Yavaş Süzülme)
-                this.speedX = (Math.random() - 0.5) * 0.1;
-                this.speedY = (Math.random() - 0.5) * 0.1;
-                this.angle = Math.random() * Math.PI * 2;
-                
-                // ⚙️ Neredeyse Dönmeyen (Çok Yavaş Rotasyon)
-                this.rot = (Math.random() - 0.5) * 0.002; 
-                this.color = colors[i % 8];
-            }
-            draw() {
-                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle);
-                ctx.fillStyle = this.color;
-                
-                // Tam 8 Dişli Çizimi
-                for(let i=0; i<8; i++) {
-                    ctx.rotate(Math.PI / 4);
-                    ctx.fillRect(this.size * 0.75, -this.size * 0.12, this.size * 0.45, this.size * 0.24);
-                }
-                ctx.beginPath(); ctx.arc(0, 0, this.size * 0.85, 0, Math.PI * 2); ctx.fill();
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath(); ctx.arc(0, 0, this.size * 0.4, 0, Math.PI * 2); ctx.fill();
-                ctx.restore();
-            }
-            update() {
-                this.x += this.speedX; this.y += this.speedY; this.angle += this.rot;
-                if(this.x < -80) this.x = canvas.width + 80;
-                if(this.x > canvas.width + 80) this.x = -80;
-                if(this.y < -80) this.y = canvas.height + 80;
-                if(this.y > canvas.height + 80) this.y = -80;
-            }
-        }
+      <h3>🔄 Kilitlenme, Hata Analizi ve Canlandırma</h3>
+      <p>Izgarada hamle kalmadığında veya süre dolduğunda oyun biter. Ardından şu adımlar izlenir:</p>
+      <ul>
+        <li><span class="icon">🔍</span> <strong>Hata Analizi:</strong> Son hamleleriniz incelenir, yanlış yerleşimler ve doğru alternatifler gösterilir.</li>
+        <li><span class="icon">❤️</span> <strong>Canlandırma:</strong> Oturumda en fazla 2 kez canlanabilirsiniz (reklam izleyerek, reklamsız pakette otomatik geçer).</li>
+      </ul>
+    </div>
 
-        // Toplam 20 adet mikro-çark (Derin uzay hissi)
-        for(let i=0; i<20; i++) gears.push(new Gear(i));
+    <!-- ROZETLER & LİGLER -->
+    <div class="guide-section" id="badges-leagues-sec">
+      <h2>🎖️ Rozetler, Ligler ve Tıklama Rehberi</h2>
+      <p>Oyunda iki farklı rozet ailesi vardır. Bunları birbirine karıştırmamak önemlidir:</p>
 
-        function anim() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            gears.forEach(g => { g.update(); g.draw(); });
-            requestAnimationFrame(anim);
-        }
-        anim();
-    </script>
+      <div class="alert-card warning">
+        <div class="icon">⚠️</div>
+        <div>
+          <div class="alert-title">LİGLERİN DÜŞMEMESİ KURALI</div>
+          <p>En yüksek skorunuza göre kazandığınız ligler (Bronz, Gümüş, Altın, Platin, Elmas) <strong>kesinlikle kalıcıdır ve skorunuz düşse dahi liginiz düşmez</strong>. Ancak düelloda yenilip Tavuk olursanız lig ilerlemeniz sıfırlanır.</p>
+        </div>
+      </div>
+
+      <h3>🎖️ Lig Kademeleri ve Skor Eşikleri</h3>
+      <div class="styled-table-wrap">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Lig Rozeti</th>
+              <th>En Yüksek Skor Eşiği</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color: #cd7f32; font-weight: bold;">Bronz Lig</td>
+              <td>0 – 119.999 (120.000 – 319.999 arası da bu ligde kalır)</td>
+            </tr>
+            <tr>
+              <td style="color: #c0c8d8; font-weight: bold;">Gümüş Lig</td>
+              <td>320.000 – 759.999</td>
+            </tr>
+            <tr>
+              <td style="color: #ffd700; font-weight: bold;">Altın Lig</td>
+              <td>1.360.000 – 2.199.999</td>
+            </tr>
+            <tr>
+              <td style="color: #e5e4e2; font-weight: bold;">Platin Lig</td>
+              <td>3.200.000 – 5.459.999</td>
+            </tr>
+            <tr>
+              <td style="color: #4ab8f0; font-weight: bold;">Elmas Lig</td>
+              <td>7.750.000 ve üzeri</td>
+            </tr>
+            <tr>
+              <td style="color: #f0a030; font-weight: bold;">👑 Şampiyon</td>
+              <td>Mod listesinde 1. sıraya ulaştığınızda verilir (geçicidir).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>🏆 Arşiv Başarım Rozetleri (24 Adet)</h3>
+      <p>Arşiv rozetleri kademeli olarak açılır (Bronz → Gümüş → Altın → Mor ve üzeri). Her rozet 4 aşamalıdır (Boyut Kaşifi 8 aşamalıdır):</p>
+      <ul>
+        <li><span class="icon">📅</span> <strong>1. Günlük Giriş Rozeti:</strong> Toplam giriş günü: 1 → 7 → 30 → 100 gün</li>
+        <li><span class="icon">👑</span> <strong>2. Taht Değişimi:</strong> Düellolarda şampiyonu tahttan indirme: 3 → 10 → 25 kez</li>
+        <li><span class="icon">⏱️</span> <strong>3. Dayanıklılık:</strong> Toplam oyun süresi: 10 saat → 50 saat → 200 saat</li>
+        <li><span class="icon">🗺️</span> <strong>4. Boyut Kaşifi (8 Aşama):</strong> Macera modunda bölüm tamamlama: 5 → 25 → 100 → 200 → 500 → 1000 → 2000 → 3000. bölüm</li>
+        <li><span class="icon">✨</span> <strong>5. İlk Adım:</strong> Klasik modda toplam oyun: 1 → 30 → 100 → 500 oyun</li>
+        <li><span class="icon">🎮</span> <strong>6. Tecrübeli Oyuncu:</strong> Klasik Normal toplam oyun: 5 → 50 → 200 → 800 oyun</li>
+        <li><span class="icon">⚡</span> <strong>7. Kıdemli Blokçu:</strong> Klasik Zamanlı toplam oyun: 5 → 20 → 50 → 150 oyun</li>
+        <li><span class="icon">💎</span> <strong>8. Skor Çırağı:</strong> Klasik Normal tek oyunda skor: 50.000 → 500.000 → 3.000.000 → 10.000.000</li>
+        <li><span class="icon">🔥</span> <strong>9. Skor Ustası:</strong> Klasik Zamanlı tek oyunda skor: 5.000 → 30.000 → 100.000 → 250.000</li>
+        <li><span class="icon">🚀</span> <strong>10. Galaksi Fatihi:</strong> Klasik Normal toplam skor (tüm oyunlar birikimi): 50.000 → 500.000 → 2.000.000</li>
+        <li><span class="icon">🌌</span> <strong>11. Blok Efsanesi:</strong> Klasik Zamanlı toplam skor: 20.000 → 100.000 → 500.000</li>
+        <li><span class="icon">💥</span> <strong>12. Kombo Sever:</strong> Klasik Normal en yüksek combo: 11 → 22 → 32 → 42 combo</li>
+        <li><span class="icon">💫</span> <strong>13. Kombo Uzmanı:</strong> Klasik Zamanlı en yüksek combo: 11 → 18 → 22 → 32 combo</li>
+        <li><span class="icon">🌟</span> <strong>14. Kombo Canavarı:</strong> Macera en yüksek combo: 11 → 22 → 32 → 42 combo</li>
+        <li><span class="icon">⚡</span> <strong>15. Kombo Tanrısı:</strong> Tüm modlarda genel en yüksek combo: 44 → 84 → 135 → 347 combo</li>
+        <li><span class="icon">⚙️</span> <strong>16. Taş Kırıcı:</strong> Klasik Normal toplam satır temizleme: 1.000 → 150.000 → 500.000 → 5.000.000 satır</li>
+        <li><span class="icon">🔩</span> <strong>17. Blok Madencisi:</strong> Klasik Zamanlı toplam satır temizleme: 500 → 1.500 → 25.000 → 1.000.000 satır</li>
+        <li><span class="icon">🧱</span> <strong>18. Zümrüt Mimar:</strong> Toplam bonus turu oynama: 10 → 30 → 100 bonus tur</li>
+        <li><span class="icon">📈</span> <strong>19. Kombo Biriktirici:</strong> Klasik Normal toplam combo sayısı: 500 → 1.000 → 5.000 → 10.000 combo</li>
+        <li><span class="icon">📊</span> <strong>20. Kombo Fabrikası:</strong> Klasik Zamanlı toplam combo: 100 → 500 → 1.000 → 5.000 combo</li>
+        <li><span class="icon">👑</span> <strong>21. Kombo İmparatoru:</strong> Macera toplam combo: 200 → 1.000 → 10.000 → 20.000 combo</li>
+        <li><span class="icon">⚔️</span> <strong>22. Meydan Okuyucu:</strong> Klasik Normal düello galibiyeti: 3 → 10 → 30 galibiyet</li>
+        <li><span class="icon">🎯</span> <strong>23. Şampiyon Avcısı:</strong> Klasik Zamanlı düello galibiyeti: 3 → 10 → 30 galibiyet</li>
+        <li><span class="icon">🏆</span> <strong>24. Yenilmez Şampiyon:</strong> Tüm modlarda toplam düello galibiyeti: 15 → 30 → 80 galibiyet</li>
+      </ul>
+
+      <h3>💡 Arşiv Rozetlerini Hızlı Toplama İpuçları</h3>
+      <ul>
+        <li><span class="icon">🔹</span> Günlük giriş ve oyun sayısı rozetleri zamanla kendiliğinden gelir.</li>
+        <li><span class="icon">🔹</span> Skor ve combo rozetleri için Klasik Normal’de uzun oturumlar oynayın.</li>
+        <li><span class="icon">🔹</span> Satır temizleme rozetleri için istikrarlı oynayın; bonus modlar süreci hızlandırır.</li>
+        <li><span class="icon">🔹</span> Meydan okuma rozetleri için düello kazanın.</li>
+        <li><span class="icon">🔹</span> Macera rozetleri için haritada ilerleyin.</li>
+      </ul>
+      <p style="margin-top: 10px;">Arşivde bir rozete dokunursanız açıklama popup’ı açılır: rozet adı, ne işe yaradığı, mevcut aşamanız ve bir sonraki hedef.</p>
+
+      <h3>👆 Oyun İçi Rozet Tıklama Etkileşimleri</h3>
+      <ul>
+        <li><strong>Lig Rozetiniz Yoksa (?):</strong> Tıklayınca <strong>Rozet Galerisi</strong> açılır. Piramit düzeninde tüm ligler listelenir. "Oynamaya başla! Sen en iyisi olabilirsin!" motivasyon mesajları ve rozetlere dokunduğunuzda detaylı "Nasıl Alırsın?" bilgileri gösterilir.</li>
+        <li><strong>Lig Rozetiniz Varsa:</strong> Tıklayınca sahip olduğunuz rozetin detay ekranı açılır. Lig adınız, rozet tanımı, "Nasıl Aldın?" tebrik yazısı ve tüm galeriye geçiş butonu sunulur.</li>
+      </ul>
+    </div>
+
+    <!-- MEYDAN OKUMA VE TAVUK -->
+    <div class="guide-section" id="challenge-rules-sec">
+      <h2>⚔️ Meydan Okuma (Düello) &amp; Tavuk Cezası</h2>
+      <p>Başka bir oyuncunun skorunu aynı oturumda geçmeye çalıştığınız rekabet modudur. Klasik Normal ve Klasik Zamanlı modlarında oynanır. Ekranda hedef skor görünür ve hedefe ulaştığınız anda maçı kazanırsınız. Kazanırsanız rakibin puanı size eklenir, rakip tavuk durumuna düşer ve şampiyon düellosunda büyük zafer animasyonu oynar.</p>
+
+      <div class="alert-card danger">
+        <div class="icon">🐔</div>
+        <div>
+          <div class="alert-title">TAVUK CEZASI VE KAYBETME SONUÇLARI</div>
+          <p>Meydan okumada hedefe ulaşamadan oyununuz biterse (kaybederseniz) veya bir rakip sizi yenerse: <strong>tüm modlardaki en iyi skorlarınız sıfırlanır, lig ilerlemeniz silinir ve profil avatarınız kalıcı olarak Yolunmuş Tavuk avatarına dönüşür</strong>.</p>
+        </div>
+      </div>
+
+      <h3>✨ Tavuk Durumundan Kurtulmak</h3>
+      <p>Tavuk cezasından kurtulmak için <strong>herhangi bir aktif oyuncuya meydan okuyup maçı kazanmanız yeterlidir</strong>. Kazandığınız an avatarınız eski haline döner, liglerde tekrar yükselmeye ve rozet kazanmaya başlayabilirsiniz.</p>
+
+      <h3>📋 Hızlı Karşılaştırma</h3>
+      <div class="styled-table-wrap">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Soru</th>
+              <th>Arşiv Rozeti</th>
+              <th>Lig Rozeti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Nereden alınır?</td>
+              <td>Çeşitli istatistiklerle otomatik</td>
+              <td>En yüksek skorunuza göre</td>
+            </tr>
+            <tr>
+              <td>Kaç seviye?</td>
+              <td>Rozet başına 3-8 aşama</td>
+              <td>5 lig + Şampiyon</td>
+            </tr>
+            <tr>
+              <td>Düşer mi?</td>
+              <td>Hayır, aşamanız kalır</td>
+              <td>Lig düşmez; Şampiyon unvanı geçicidir</td>
+            </tr>
+            <tr>
+              <td>Tavuk cezası etkisi?</td>
+              <td>Rozetleriniz silinmez</td>
+              <td>Lig seviyeniz ve skorunuz sıfırlanır</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SIK SORULAN SORULAR -->
+    <div class="guide-section" id="faq-sec">
+      <h2>❓ Sık Sorulan Sorular (SSS)</h2>
+      
+      <div class="accordion-category-title">Genel &amp; Hesap</div>
+      <div class="accordion-group">
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Gear Blast nedir?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Parçaları ızgaraya yerleştirip satır ve sütunları temizleyerek skor yaptığınız bir bulmaca oyunudur. Macera, klasik skor, zamanlı mod ve diğer oyunculara meydan okuma gibi farklı oyun tarzları sunar.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Oyun ücretsiz mi?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Evet, ücretsiz indirilip oynanabilir. Undo paketleri, reklamsız oyun ve kullanıcı adı değiştirme gibi isteğe bağlı satın alımlar mağazada yer alır.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>İnternet bağlantısı gerekli mi?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Tek başınıza oynamak için gerekmez; oyun kaydedilir ve çevrimdışı oynanabilir. Skor tablosu, meydan okuma ve profil senkronu için internet gerekir.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Kullanıcı adımı değiştirebilir miyim?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Varsayılan olarak hayır. Mağazadan kullanıcı adı değiştirme paketi aldıysanız profil ekranından isminizi bir kez değiştirebilirsiniz. Avatarınızı ise istediğiniz zaman profil ekranından ücretsiz değiştirebilirsiniz.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-category-title">Oyun Modları &amp; Oynanış</div>
+      <div class="accordion-group">
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Kaç mod var? Hangi modla başlamalıyım?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Dört ana mod bulunur: Macera, Klasik Normal, Klasik Zamanlı ve Meydan Okuma. Yeni başlayanlar için level ve bonus sistemini öğrenmek adına Klasik Normal en iyi başlangıçtır.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Macera ile Klasik arasındaki fark nedir?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Macera modu 3000 bölümlük bir haritada süre veya hamle sınırı olmadan ilerleyip renk barlarını doldurmaya ve robot toplamaya odaklanır. Klasik modlar ise sınırsız skor, level sistemi, bonus turları ve lig rozetleri içerir.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Çapraz patlama ne işe yarar?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Aynı hamlede hem dikey hem de yatay satırları aynı anda temizlediğinizde çapraz patlama oluşur ve size çok yüksek combo puanı ile skor bonusu kazandırır.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Canlandırma ve hata analizi nedir?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Hamle kalmayıp yandığınızda, hata analizi ekranı son hamlelerinizi inceleyerek nereye yanlış koyduğunuzu ve doğru alternatifleri gösterir. Ardından reklam izleyerek (reklamsız pakette otomatik) oturumda en fazla 2 kez canlanabilirsiniz.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-category-title">Undo (Geri Al) &amp; Mağaza</div>
+      <div class="accordion-group">
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Undo (Geri Al) hakkını nasıl kullanırım?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Klasik Normal ve Klasik Zamanlı modlarında son yaptığınız hamleyi geri alabilirsiniz. Oyuna 3 hakla başlarsınız, fazlasını mağazadan paket olarak alabilir ve envanterinizden aktif yuvalara yükleyebilirsiniz. Macera modunda undo yoktur.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Mağazadan satın alınan reklamsız paket neleri kaldırır?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>Mağazadaki reklamsız paketi aldığınızda oyun altındaki banner reklamlar ile canlanma ve geçişlerde çıkan tam ekran reklamlar tamamen kaldırılır; canlanmalar reklam izlemeden anında gerçekleşir.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════ ENGLISH CONTENT ══════════════════ -->
+  <div id="content-en" style="display: none;">
+
+    <!-- HOW TO PLAY -->
+    <div class="guide-section" id="how-to-play-sec-en">
+      <h2>📖 How to Play Gear Blast?</h2>
+      <p>Gear Blast is a block puzzle game where you place shapes made of colored gears onto an 8x8 grid, clear rows and columns, gather scores, and challenge other players. The rules are simple, but mastering it requires strategy.</p>
+
+      <h3>🎮 Basic Gameplay</h3>
+      <p>Each turn you see 3 pieces at the bottom. Drag a piece onto the grid. When placed:</p>
+      <ul>
+        <li><span class="icon">🔹</span> Filled rows and columns explode, earning you points.</li>
+        <li><span class="icon">🔹</span> Clearing dually durning the same turn builds a combo; the higher the combo, the higher the score multiplier.</li>
+        <li><span class="icon">🔹</span> Placing all three shapes spawns a new set.</li>
+      </ul>
+      <p>The game ends when no pieces fit on the grid. Therefore, you must balance scoring with keeping the grid open.</p>
+
+      <h3>🚀 First Steps</h3>
+      <ul>
+        <li><span class="icon">1️⃣</span> Open the application.</li>
+        <li><span class="icon">2️⃣</span> Select your username and avatar (visible on the leaderboard).</li>
+        <li><span class="icon">3️⃣</span> Choose your game mode from the main menu.</li>
+        <li><span class="icon">4️⃣</span> Drag and drop shapes to start playing.</li>
+      </ul>
+
+      <h3>📋 Summary Table</h3>
+      <div class="styled-table-wrap">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>What you do</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Place a shape on the grid</td>
+              <td>Rows/columns fill up and blast, earning score</td>
+            </tr>
+            <tr>
+              <td>Build combos</td>
+              <td>Higher score multiplier</td>
+            </tr>
+            <tr>
+              <td>Complete mode / game over</td>
+              <td>Score is written to the leaderboard</td>
+            </tr>
+            <tr>
+              <td>Complete an Adventure level</td>
+              <td>Unlock the next stage on the map</td>
+            </tr>
+            <tr>
+              <td>Win a Challenge duel</td>
+              <td>The opponent's score is transferred to you</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GAME MODES -->
+    <div class="guide-section" id="game-modes-sec-en">
+      <h2>🎮 Four Game Modes</h2>
+      <div class="grid-cards">
+        <div class="grid-card">
+          <div class="grid-card-title">1. Adventure Mode</div>
+          <p><strong>A journey of 3000 levels.</strong> Each level has unique colors and layouts. Fill the color bars at the top or clear obstacles to complete levels and collect rare robots for your collection.</p>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-title">2. Classic Normal Mode</div>
+          <p><strong>Infinite scores and level system.</strong> Shatter ice frames to level up, and trigger 60-second moving grid bonus rounds for a 10x score multiplier.</p>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-title">3. Classic Timed Mode</div>
+          <p><strong>Time pressure.</strong> The timer starts on your first move. Complete every 3-piece set to refresh the timer (usually 3-6 seconds). Don't let the bar run empty.</p>
+        </div>
+        <div class="grid-card">
+          <div class="grid-card-title">4. Challenge Mode</div>
+          <p><strong>Head-to-head duels.</strong> Beat the opponent's score in Classic Normal or Timed mode. Reach the target score to win immediately. Cautions apply on defeat.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BADGES & LEAGUES -->
+    <div class="guide-section" id="badges-leagues-sec-en">
+      <h2>🎖️ Badges, Leagues &amp; Click Guide</h2>
+      <p>There are two distinct families of badges. Do not confuse them:</p>
+
+      <div class="alert-card warning">
+        <div class="icon">⚠️</div>
+        <div>
+          <div class="alert-title">PERSISTENT LEAGUES RULE</div>
+          <p>Leagues earned based on your high score (Bronze, Silver, Gold, Platinum, Diamond) <strong>are completely permanent and will not drop</strong>, even if your scores decrease. However, losing a duel and turning into a Chicken resets your progress.</p>
+        </div>
+      </div>
+
+      <h3>🎖️ League Tiers &amp; Score Thresholds</h3>
+      <div class="styled-table-wrap">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>League Badge</th>
+              <th>High Score Requirement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color: #cd7f32; font-weight: bold;">Bronze League</td>
+              <td>0 – 119,999 (scores up to 319,999 also stay in Bronze)</td>
+            </tr>
+            <tr>
+              <td style="color: #c0c8d8; font-weight: bold;">Silver League</td>
+              <td>320,000 – 759,999</td>
+            </tr>
+            <tr>
+              <td style="color: #ffd700; font-weight: bold;">Gold League</td>
+              <td>1,360,000 – 2,199,999</td>
+            </tr>
+            <tr>
+              <td style="color: #e5e4e2; font-weight: bold;">Platinum League</td>
+              <td>3,200,000 – 5,459,999</td>
+            </tr>
+            <tr>
+              <td style="color: #4ab8f0; font-weight: bold;">Diamond League</td>
+              <td>7,750,000 and above</td>
+            </tr>
+            <tr>
+              <td style="color: #f0a030; font-weight: bold;">👑 Champion</td>
+              <td>Awarded temporarily to the 1st place player on the leaderboard.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CHALLENGE & CHICKEN -->
+    <div class="guide-section" id="challenge-rules-sec-en">
+      <h2>⚔️ Challenges &amp; Chicken Penalty</h2>
+      <p>Duel other players in Classic Normal or Timed modes. Beat their target score to win and reset their progress while taking their points.</p>
+
+      <div class="alert-card danger">
+        <div class="icon">🐔</div>
+        <div>
+          <div class="alert-title">CHICKEN STATE AND LOSS PENALTY</div>
+          <p>If you fail to reach the target score, or if another player defeats your high score: <strong>your high scores across all modes are reset to zero, league progress is lost, and your avatar permanently becomes a plucked Chicken</strong>.</p>
+        </div>
+      </div>
+
+      <h3>✨ Recovering from Chicken Status</h3>
+      <p>Simply challenge any active player on the leaderboard and win the match to recover your profile and start climbing the leagues again.</p>
+    </div>
+
+    <!-- FAQ -->
+    <div class="guide-section" id="faq-sec-en">
+      <h2>❓ Frequently Asked Questions (FAQ)</h2>
+      <div class="accordion-group">
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>Is an internet connection required?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>No, you can play Adventure and offline modes offline. However, internet is required for leaderboards, duels, and syncing profile data.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span>How do I change my username?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <p>You can change your username once after purchasing the Username Change Pack in the shop. Avatars can be changed for free at any time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    Developed by <strong>İlhan Mehmet Altuntaş</strong><br>&copy; 2026 Gear Blast. All rights reserved.
+  </footer>
+
+</div>
+
+<script>
+  // ─── LANGUAGE TOGGLE ───
+  let currentLang = 'tr';
+
+  function toggleLanguage() {
+    currentLang = currentLang === 'tr' ? 'en' : 'tr';
+    applyLanguage();
+  }
+
+  function applyLanguage() {
+    const btnTr = document.getElementById('btn-lang-tr');
+    const btnEn = document.getElementById('btn-lang-en');
+    const contentTr = document.getElementById('content-tr');
+    const contentEn = document.getElementById('content-en');
+
+    if (currentLang === 'tr') {
+      btnTr.classList.add('active');
+      btnEn.classList.remove('active');
+      contentTr.style.display = 'block';
+      contentEn.style.display = 'none';
+
+      // Header Texts
+      document.getElementById('btn-dl-text').textContent = 'Google Play\'den İndir';
+      document.getElementById('toc-header-text').textContent = 'İçindekiler / Hızlı Bağlantılar';
+      document.getElementById('toc-rules-text').textContent = 'Nasıl Oynanır?';
+      document.getElementById('toc-modes-text').textContent = 'Oyun Modları';
+      document.getElementById('toc-badges-text').textContent = 'Rozetler & Ligler';
+      document.getElementById('toc-challenge-text').textContent = 'Meydan Okuma';
+      document.getElementById('toc-faq-text').textContent = 'Sık Sorulan Sorular';
+    } else {
+      btnTr.classList.remove('active');
+      btnEn.classList.add('active');
+      contentTr.style.display = 'none';
+      contentEn.style.display = 'block';
+
+      // Header Texts
+      document.getElementById('btn-dl-text').textContent = 'Download on Google Play';
+      document.getElementById('toc-header-text').textContent = 'Table of Contents / Quick Links';
+      document.getElementById('toc-rules-text').textContent = 'How to Play';
+      document.getElementById('toc-modes-text').textContent = 'Game Modes';
+      document.getElementById('toc-badges-text').textContent = 'Badges & Leagues';
+      document.getElementById('toc-challenge-text').textContent = 'Challenges';
+      document.getElementById('toc-faq-text').textContent = 'FAQ';
+    }
+  }
+
+  // ─── ACCORDION TOGGLE ───
+  function toggleAccordion(btn) {
+    const item = btn.parentElement;
+    const isActive = item.classList.contains('active');
+    
+    // Close other items
+    document.querySelectorAll('.accordion-item').forEach(i => {
+      i.classList.remove('active');
+      i.querySelector('.accordion-content').style.maxHeight = null;
+    });
+
+    if (!isActive) {
+      item.classList.add('active');
+      const content = item.querySelector('.accordion-content');
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  }
+
+  // ─── GEAR ANIMATION ON CANVAS ───
+  const canvas = document.getElementById('gearCanvas');
+  const ctx = canvas.getContext('2d');
+  let gears = [];
+  const colors = ['#f0a030', '#ff4a4a', '#4ab8f0', '#cc00ff', '#3de870', '#ffffff', '#ff0066', '#00ffcc'];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  class Gear {
+    constructor(i) {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 30 + 15;
+      this.speedX = (Math.random() - 0.5) * 0.08;
+      this.speedY = (Math.random() - 0.5) * 0.08;
+      this.angle = Math.random() * Math.PI * 2;
+      this.rot = (Math.random() - 0.5) * 0.0015;
+      this.color = colors[i % colors.length];
+    }
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.angle);
+      ctx.fillStyle = this.color;
+      
+      // Draw gear teeth
+      for (let j = 0; j < 8; j++) {
+        ctx.rotate(Math.PI / 4);
+        ctx.fillRect(this.size * 0.75, -this.size * 0.12, this.size * 0.4, this.size * 0.24);
+      }
+      // Inner circle
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size * 0.85, 0, Math.PI * 2);
+      ctx.fill();
+      // Cutout hole
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size * 0.38, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.angle += this.rot;
+      if (this.x < -80) this.x = canvas.width + 80;
+      if (this.x > canvas.width + 80) this.x = -80;
+      if (this.y < -80) this.y = canvas.height + 80;
+      if (this.y > canvas.height + 80) this.y = -80;
+    }
+  }
+
+  for (let i = 0; i < 25; i++) {
+    gears.push(new Gear(i));
+  }
+
+  function anim() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    gears.forEach(g => {
+      g.update();
+      g.draw();
+    });
+    requestAnimationFrame(anim);
+  }
+  anim();
+</script>
 </body>
 </html>
