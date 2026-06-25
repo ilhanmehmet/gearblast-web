@@ -464,6 +464,7 @@
     .duel-banner-full-width { padding: 35px 0; }
     .duel-banner-content-inner h3 { font-size: 1.7rem; letter-spacing: 1px; }
     .duel-banner-content-inner .highlight-neon { font-size: 1.9rem; }
+    .duel-banner-content-inner .duel-sub-badge { padding: 6px 16px; font-size: 0.9rem; margin: 5px 0 15px; }
     .duel-banner-content-inner p { font-size: 1.05rem; }
     .duel-banner-content-inner .highlight-text { font-size: 1.25rem; margin: 15px 0; }
     .duel-banner-content-inner .vs-badge { font-size: 5rem; right: 10px; }
@@ -571,6 +572,22 @@
     transform: scale(1.05);
     box-shadow: 0 0 40px rgba(61, 232, 112, 0.7);
   }
+  /* SUB BADGE */
+  .duel-sub-badge {
+    display: inline-block;
+    border: 2px solid var(--blue);
+    color: var(--blue);
+    padding: 8px 24px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border-radius: var(--radius-md);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 10px 0 25px;
+    box-shadow: 0 0 15px rgba(74, 184, 240, 0.3), inset 0 0 10px rgba(74, 184, 240, 0.1);
+    background: rgba(74, 184, 240, 0.05);
+    text-shadow: 0 0 8px rgba(74, 184, 240, 0.4);
+  }
 </style>
 </head>
 <body>
@@ -596,6 +613,7 @@
     <div class="duel-banner-content-inner">
       <div class="vs-badge">VS</div>
       <h3 id="duel-banner-title">Gear Blast’ta Yeni Dönem: <span class="highlight-neon">Canlı Düellolar</span> Başladı!</h3>
+      <div class="duel-sub-badge" id="duel-banner-sub-badge">MEYDAN OKU DÜELLOYU BAŞLAT</div>
       <p id="duel-banner-highlight" class="highlight-text">En iyi kim? Sen mi, arkadaşın mı? Artık tahminleri bırak, Gerçek Zamanlı Düello sistemiyle sahneye çık!</p>
       <p id="duel-banner-desc">Arkadaşlarını canlı mücadeleye davet et, zekanı konuştur ve rekabetin tadını çıkar. Sınırları aşmak istersen, küresel şampiyonada tüm dünyaya meydan oku! Eğlenceyi stratejiyle birleştir, skor tablosunun zirvesine yerleş ve şampiyonluğunu ilan et.</p>
       <a href="https://play.google.com/store/apps/details?id=com.gearblast.game" class="duel-cta-btn" id="duel-cta-btn">Hemen Gear Blast'a gir, düelloyu başlat!</a>
@@ -1256,6 +1274,7 @@
 
       // Live Duel Banner Texts
       document.getElementById('duel-banner-title').innerHTML = 'Gear Blast’ta Yeni Dönem: <span class="highlight-neon">Canlı Düellolar</span> Başladı!';
+      document.getElementById('duel-banner-sub-badge').textContent = 'MEYDAN OKU DÜELLOYU BAŞLAT';
       document.getElementById('duel-banner-highlight').textContent = 'En iyi kim? Sen mi, arkadaşın mı? Artık tahminleri bırak, Gerçek Zamanlı Düello sistemiyle sahneye çık!';
       document.getElementById('duel-banner-desc').textContent = 'Arkadaşlarını canlı mücadeleye davet et, zekanı konuştur ve rekabetin tadını çıkar. Sınırları aşmak istersen, küresel şampiyonada tüm dünyaya meydan oku! Eğlenceyi stratejiyle birleştir, skor tablosunun zirvesine yerleş ve şampiyonluğunu ilan et.';
       document.getElementById('duel-cta-btn').textContent = 'Hemen Gear Blast\'a gir, düelloyu başlat!';
@@ -1276,6 +1295,7 @@
 
       // Live Duel Banner Texts
       document.getElementById('duel-banner-title').innerHTML = 'A New Era in Gear Blast: <span class="highlight-neon">Live Duels</span> Have Begun!';
+      document.getElementById('duel-banner-sub-badge').textContent = 'CHALLENGE START THE DUEL';
       document.getElementById('duel-banner-highlight').textContent = 'Who is the best? You or your friend? Stop guessing now, step onto the stage with the Real-Time Duel system!';
       document.getElementById('duel-banner-desc').textContent = 'Invite your friends to live combat, show off your intelligence, and enjoy the competition. If you want to push the boundaries, challenge the whole world in the global championship! Combine fun with strategy, claim the top of the leaderboard, and declare your championship.';
       document.getElementById('duel-cta-btn').textContent = 'Enter Gear Blast now, start the duel!';
