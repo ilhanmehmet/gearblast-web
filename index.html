@@ -461,9 +461,78 @@
     .hero h2 { font-size: 1.1rem; }
     .guide-section { padding: 20px; }
     .toc-links { grid-template-columns: 1fr 1fr; }
+    .duel-banner-card { padding: 25px 20px; }
+    .duel-banner-card h3 { font-size: 1.4rem; }
+    .duel-banner-card p { font-size: 0.95rem; }
   }
   @media (max-width: 480px) {
     .toc-links { grid-template-columns: 1fr; }
+  }
+
+  /* ─── LIVE DUEL BANNER CARD ─── */
+  .duel-banner-card {
+    background: linear-gradient(135deg, rgba(13, 30, 54, 0.9) 0%, rgba(240, 160, 48, 0.15) 50%, rgba(255, 74, 74, 0.1) 100%);
+    border: 1px solid rgba(240, 160, 48, 0.4);
+    box-shadow: 0 10px 30px rgba(240, 160, 48, 0.15), inset 0 0 20px rgba(240, 160, 48, 0.05);
+    border-radius: var(--radius-lg);
+    padding: 35px 30px;
+    margin: 30px 0 40px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    transition: var(--transition);
+    text-align: center;
+  }
+  .duel-banner-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(240, 160, 48, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .duel-banner-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(240, 160, 48, 0.8);
+    box-shadow: 0 15px 45px rgba(240, 160, 48, 0.3), 0 0 20px rgba(255, 74, 74, 0.15);
+  }
+  .duel-banner-card h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 15px rgba(240, 160, 48, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .duel-banner-card p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 0;
+    font-weight: 400;
+  }
+  .duel-banner-card .highlight-text {
+    font-weight: 700;
+    color: var(--blue);
+    margin: 15px 0;
+    font-size: 1.15rem;
+    text-shadow: 0 0 10px rgba(74, 184, 240, 0.3);
+  }
+  .duel-banner-card .vs-badge {
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.03);
+    user-select: none;
+    font-style: italic;
   }
 </style>
 </head>
@@ -494,6 +563,15 @@
       <span id="btn-dl-text">Google Play'den İndir</span>
     </a>
   </section>
+
+  <!-- LIVE DUEL BANNER -->
+  <div class="duel-banner-card">
+    <div class="vs-badge">VS</div>
+    <h3 id="duel-banner-title">⚡ Gear Blast'ta Canlı Düello Sistemi</h3>
+    <p id="duel-banner-desc">GearBlast'ta artık gerçek zamanlı düello başlatabilir, arkadaşlarınla canlı olarak yarışabilirsin. Arkadaşlarından birini düelloya davet et ve eğlenceyi zekanla birleştir, hem stresini at hem eğlen.</p>
+    <div class="highlight-text" id="duel-banner-highlight">En iyi kim? Sen mi, arkadaşın mı?</div>
+    <p id="duel-banner-footer">Daha da ileri gidebilir, şampiyonada meydan okuyup düelloya davet edebilirsin. Tüm dünyaya meydan okumaya hemen başla!</p>
+  </div>
 
   <!-- TABLE OF CONTENTS (İÇİNDEKİLER) -->
   <div class="toc-container">
@@ -743,19 +821,27 @@
 
     <!-- MEYDAN OKUMA VE TAVUK -->
     <div class="guide-section" id="challenge-rules-sec">
-      <h2>⚔️ Meydan Okuma (Düello) &amp; Tavuk Cezası</h2>
-      <p>Başka bir oyuncunun skorunu aynı oturumda geçmeye çalıştığınız rekabet modudur. Klasik Normal ve Klasik Zamanlı modlarında oynanır. Ekranda hedef skor görünür ve hedefe ulaştığınız anda maçı kazanırsınız. Kazanırsanız rakibin puanı size eklenir, rakip tavuk durumuna düşer ve şampiyon düellosunda büyük zafer animasyonu oynar.</p>
+      <h2>⚔️ Meydan Okumadan Önce Bilmen Gerekenler</h2>
+      <p>Başka bir oyuncunun skorunu aynı oturumda geçmeye çalıştığınız rekabet modudur. Klasik Normal ve Klasik Zamanlı modlarında oynanır. Ekranda hedef skor görünür ve hedefe ulaştığınız anda maçı kazanırsınız.</p>
 
       <div class="alert-card danger">
         <div class="icon">🐔</div>
         <div>
-          <div class="alert-title">TAVUK CEZASI VE KAYBETME SONUÇLARI</div>
-          <p>Meydan okumada hedefe ulaşamadan oyununuz biterse (kaybederseniz) veya bir rakip sizi yenerse: <strong>tüm modlardaki en iyi skorlarınız sıfırlanır, lig ilerlemeniz silinir ve profil avatarınız kalıcı olarak Yolunmuş Tavuk avatarına dönüşür</strong>.</p>
+          <div class="alert-title">YENERSENİZ</div>
+          <p>Eğer meydan okuduğun rakibini yenersen, Rakibinin Avatarı Yolunmuş Tavuk Avatarı Olur ve Puanı sıfırlanır, Rakibinin Tüm Puanı senin Hanene yazılır.</p>
+        </div>
+      </div>
+
+      <div class="alert-card danger">
+        <div class="icon">⚠️</div>
+        <div>
+          <div class="alert-title">YENEMEZSENİZ</div>
+          <p>Eğer Rakibini Yenemezsen, Puanın sıfırlanır ve senin avatarın yolunmuş tavuk olur.</p>
         </div>
       </div>
 
       <h3>✨ Tavuk Durumundan Kurtulmak</h3>
-      <p>Tavuk cezasından kurtulmak için <strong>herhangi bir aktif oyuncuya meydan okuyup maçı kazanmanız yeterlidir</strong>. Kazandığınız an avatarınız eski haline döner, liglerde tekrar yükselmeye ve rozet kazanmaya başlayabilirsiniz.</p>
+      <p>Yolunmuş Tavuk Avatarından Kurtulmak için, Herhangi birine meydan okuyup yenmelisin.</p>
 
       <h3>📋 Hızlı Karşılaştırma</h3>
       <div class="styled-table-wrap">
@@ -1039,19 +1125,27 @@
 
     <!-- CHALLENGE & CHICKEN -->
     <div class="guide-section" id="challenge-rules-sec-en">
-      <h2>⚔️ Challenges &amp; Chicken Penalty</h2>
-      <p>Duel other players in Classic Normal or Timed modes. Beat their target score to win and reset their progress while taking their points.</p>
+      <h2>⚔️ What You Need to Know Before Challenging</h2>
+      <p>A competitive mode where you try to beat another player's high score in the same session. Played in Classic Normal or Timed mode. You win immediately when reaching the target score.</p>
 
       <div class="alert-card danger">
         <div class="icon">🐔</div>
         <div>
-          <div class="alert-title">CHICKEN STATE AND LOSS PENALTY</div>
-          <p>If you fail to reach the target score, or if another player defeats your high score: <strong>your high scores across all modes are reset to zero, league progress is lost, and your avatar permanently becomes a plucked Chicken</strong>.</p>
+          <div class="alert-title">IF YOU WIN</div>
+          <p>If you defeat the opponent you challenged, Their avatar becomes a Plucked Chicken avatar and their score resets to zero, All of their points are added to your score.</p>
+        </div>
+      </div>
+
+      <div class="alert-card danger">
+        <div class="icon">⚠️</div>
+        <div>
+          <div class="alert-title">IF YOU LOSE</div>
+          <p>If you cannot defeat your opponent, your score resets to zero and your avatar becomes a plucked chicken.</p>
         </div>
       </div>
 
       <h3>✨ Recovering from Chicken Status</h3>
-      <p>Simply challenge any active player on the leaderboard and win the match to recover your profile and start climbing the leagues again.</p>
+      <p>To recover from the Plucked Chicken avatar, You must challenge anyone and win.</p>
     </div>
 
     <!-- FAQ -->
@@ -1117,6 +1211,12 @@
       document.getElementById('toc-badges-text').textContent = 'Rozetler & Ligler';
       document.getElementById('toc-challenge-text').textContent = 'Meydan Okuma';
       document.getElementById('toc-faq-text').textContent = 'Sık Sorulan Sorular';
+
+      // Live Duel Banner Texts
+      document.getElementById('duel-banner-title').textContent = '⚡ Gear Blast\'ta Canlı Düello Sistemi';
+      document.getElementById('duel-banner-desc').textContent = 'GearBlast\'ta artık gerçek zamanlı düello başlatabilir, arkadaşlarınla canlı olarak yarışabilirsin. Arkadaşlarından birini düelloya davet et ve eğlenceyi zekanla birleştir, hem stresini at hem eğlen.';
+      document.getElementById('duel-banner-highlight').textContent = 'En iyi kim? Sen mi, arkadaşın mı?';
+      document.getElementById('duel-banner-footer').textContent = 'Dahada ileri gidebilir şampiyonada meydan okuyup duelloya davet edebilirsin, tüm dünyaya meydan okumaya hemen başla,';
     } else {
       btnTr.classList.remove('active');
       btnEn.classList.add('active');
@@ -1131,6 +1231,12 @@
       document.getElementById('toc-badges-text').textContent = 'Badges & Leagues';
       document.getElementById('toc-challenge-text').textContent = 'Challenges';
       document.getElementById('toc-faq-text').textContent = 'FAQ';
+
+      // Live Duel Banner Texts
+      document.getElementById('duel-banner-title').textContent = '⚡ Real-Time Duel System in Gear Blast';
+      document.getElementById('duel-banner-desc').textContent = 'You can now start real-time duels in GearBlast and race live with your friends! Invite your friends to a duel and combine fun with your intelligence, relieve your stress and have fun.';
+      document.getElementById('duel-banner-highlight').textContent = 'Who is the best? You or your friend?';
+      document.getElementById('duel-banner-footer').textContent = 'You can go even further and challenge the champion to a duel in the championship. Start challenging the whole world right now!';
     }
   }
 
