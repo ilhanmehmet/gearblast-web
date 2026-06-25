@@ -463,9 +463,11 @@
     .toc-links { grid-template-columns: 1fr 1fr; }
     .duel-banner-full-width { padding: 35px 0; }
     .duel-banner-content-inner h3 { font-size: 1.7rem; letter-spacing: 1px; }
+    .duel-banner-content-inner .highlight-neon { font-size: 1.9rem; }
     .duel-banner-content-inner p { font-size: 1.05rem; }
     .duel-banner-content-inner .highlight-text { font-size: 1.25rem; margin: 15px 0; }
     .duel-banner-content-inner .vs-badge { font-size: 5rem; right: 10px; }
+    .duel-cta-btn { padding: 12px 30px; font-size: 1rem; }
   }
   @media (max-width: 480px) {
     .toc-links { grid-template-columns: 1fr; }
@@ -478,7 +480,7 @@
     border-top: 2px solid rgba(240, 160, 48, 0.6);
     border-bottom: 2px solid rgba(255, 74, 74, 0.4);
     box-shadow: 0 15px 40px rgba(240, 160, 48, 0.2), 0 -10px 30px rgba(13, 30, 54, 0.5);
-    margin: 40px 0 50px;
+    margin: 0 0 50px;
     padding: 50px 0;
     position: relative;
     overflow: hidden;
@@ -509,23 +511,25 @@
   .duel-banner-content-inner h3 {
     font-size: 2.4rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #ffd700 0%, var(--accent) 50%, #ff4a4a 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ffd700;
     text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 20px;
-    filter: drop-shadow(0 2px 10px rgba(240, 160, 48, 0.4));
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    text-shadow: 0 2px 10px rgba(245, 150, 20, 0.3);
+  }
+  .duel-banner-content-inner .highlight-neon {
+    color: #ff4a4a;
+    font-size: 2.6rem;
+    text-shadow: 0 0 20px rgba(255, 74, 74, 0.8), 0 0 40px rgba(255, 74, 74, 0.4);
+    display: inline-block;
+    font-weight: 900;
   }
   .duel-banner-content-inner p {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     line-height: 1.8;
     color: var(--text);
-    margin-bottom: 0;
-    font-weight: 400;
+    max-width: 800px;
+    margin: 0 auto 20px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.6);
   }
   .duel-banner-content-inner .highlight-text {
@@ -547,6 +551,26 @@
     user-select: none;
     font-style: italic;
   }
+  /* CTA BUTTON */
+  .duel-cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #3de870 0%, #1faf3b 100%);
+    color: #040a16 !important;
+    padding: 16px 40px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    border-radius: 40px;
+    text-decoration: none;
+    box-shadow: 0 0 25px rgba(61, 232, 112, 0.4);
+    transition: var(--transition);
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .duel-cta-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(61, 232, 112, 0.7);
+  }
 </style>
 </head>
 <body>
@@ -565,6 +589,20 @@
       <button class="lang-btn" id="btn-lang-en">EN</button>
     </div>
   </header>
+  </div> <!-- /container -->
+
+  <!-- LIVE DUEL BANNER -->
+  <div class="duel-banner-full-width">
+    <div class="duel-banner-content-inner">
+      <div class="vs-badge">VS</div>
+      <h3 id="duel-banner-title">Gear Blast’ta Yeni Dönem: <span class="highlight-neon">Canlı Düellolar</span> Başladı!</h3>
+      <p id="duel-banner-highlight" class="highlight-text">En iyi kim? Sen mi, arkadaşın mı? Artık tahminleri bırak, Gerçek Zamanlı Düello sistemiyle sahneye çık!</p>
+      <p id="duel-banner-desc">Arkadaşlarını canlı mücadeleye davet et, zekanı konuştur ve rekabetin tadını çıkar. Sınırları aşmak istersen, küresel şampiyonada tüm dünyaya meydan oku! Eğlenceyi stratejiyle birleştir, skor tablosunun zirvesine yerleş ve şampiyonluğunu ilan et.</p>
+      <a href="https://play.google.com/store/apps/details?id=com.gearblast.game" class="duel-cta-btn" id="duel-cta-btn">Hemen Gear Blast'a gir, düelloyu başlat!</a>
+    </div>
+  </div>
+
+  <div class="container">
 
   <!-- HERO SECTION -->
   <section class="hero">
@@ -576,20 +614,7 @@
       <span id="btn-dl-text">Google Play'den İndir</span>
     </a>
   </section>
-  </div> <!-- /container -->
 
-  <!-- LIVE DUEL BANNER -->
-  <div class="duel-banner-full-width">
-    <div class="duel-banner-content-inner">
-      <div class="vs-badge">VS</div>
-      <h3 id="duel-banner-title">⚡ Gear Blast'ta Canlı Düello Sistemi</h3>
-      <p id="duel-banner-desc">GearBlast'ta artık gerçek zamanlı düello başlatabilir, arkadaşlarınla canlı olarak yarışabilirsin. Arkadaşlarından birini düelloya davet et ve eğlenceyi zekanla birleştir, hem stresini at hem eğlen.</p>
-      <div class="highlight-text" id="duel-banner-highlight">En iyi kim? Sen mi, arkadaşın mı?</div>
-      <p id="duel-banner-footer">Daha da ileri gidebilir, şampiyonada meydan okuyup düelloya davet edebilirsin. Tüm dünyaya meydan okumaya hemen başla!</p>
-    </div>
-  </div>
-
-  <div class="container">
   <!-- TABLE OF CONTENTS (İÇİNDEKİLER) -->
   <div class="toc-container">
     <div class="toc-title">
@@ -1230,10 +1255,10 @@
       document.getElementById('toc-faq-text').textContent = 'Sık Sorulan Sorular';
 
       // Live Duel Banner Texts
-      document.getElementById('duel-banner-title').textContent = '⚡ Gear Blast\'ta Canlı Düello Sistemi';
-      document.getElementById('duel-banner-desc').textContent = 'GearBlast\'ta artık gerçek zamanlı düello başlatabilir, arkadaşlarınla canlı olarak yarışabilirsin. Arkadaşlarından birini düelloya davet et ve eğlenceyi zekanla birleştir, hem stresini at hem eğlen.';
-      document.getElementById('duel-banner-highlight').textContent = 'En iyi kim? Sen mi, arkadaşın mı?';
-      document.getElementById('duel-banner-footer').textContent = 'Dahada ileri gidebilir şampiyonada meydan okuyup duelloya davet edebilirsin, tüm dünyaya meydan okumaya hemen başla,';
+      document.getElementById('duel-banner-title').innerHTML = 'Gear Blast’ta Yeni Dönem: <span class="highlight-neon">Canlı Düellolar</span> Başladı!';
+      document.getElementById('duel-banner-highlight').textContent = 'En iyi kim? Sen mi, arkadaşın mı? Artık tahminleri bırak, Gerçek Zamanlı Düello sistemiyle sahneye çık!';
+      document.getElementById('duel-banner-desc').textContent = 'Arkadaşlarını canlı mücadeleye davet et, zekanı konuştur ve rekabetin tadını çıkar. Sınırları aşmak istersen, küresel şampiyonada tüm dünyaya meydan oku! Eğlenceyi stratejiyle birleştir, skor tablosunun zirvesine yerleş ve şampiyonluğunu ilan et.';
+      document.getElementById('duel-cta-btn').textContent = 'Hemen Gear Blast\'a gir, düelloyu başlat!';
     } else {
       btnTr.classList.remove('active');
       btnEn.classList.add('active');
@@ -1250,10 +1275,10 @@
       document.getElementById('toc-faq-text').textContent = 'FAQ';
 
       // Live Duel Banner Texts
-      document.getElementById('duel-banner-title').textContent = '⚡ Real-Time Duel System in Gear Blast';
-      document.getElementById('duel-banner-desc').textContent = 'You can now start real-time duels in GearBlast and race live with your friends! Invite your friends to a duel and combine fun with your intelligence, relieve your stress and have fun.';
-      document.getElementById('duel-banner-highlight').textContent = 'Who is the best? You or your friend?';
-      document.getElementById('duel-banner-footer').textContent = 'You can go even further and challenge the champion to a duel in the championship. Start challenging the whole world right now!';
+      document.getElementById('duel-banner-title').innerHTML = 'A New Era in Gear Blast: <span class="highlight-neon">Live Duels</span> Have Begun!';
+      document.getElementById('duel-banner-highlight').textContent = 'Who is the best? You or your friend? Stop guessing now, step onto the stage with the Real-Time Duel system!';
+      document.getElementById('duel-banner-desc').textContent = 'Invite your friends to live combat, show off your intelligence, and enjoy the competition. If you want to push the boundaries, challenge the whole world in the global championship! Combine fun with strategy, claim the top of the leaderboard, and declare your championship.';
+      document.getElementById('duel-cta-btn').textContent = 'Enter Gear Blast now, start the duel!';
     }
   }
 
