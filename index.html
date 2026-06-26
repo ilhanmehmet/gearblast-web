@@ -532,7 +532,7 @@
     .hero h2 { font-size: 1.1rem; }
     .guide-section { padding: 20px; }
     .toc-links { grid-template-columns: 1fr 1fr; }
-    .duel-banner-full-width { padding: 35px 0; }
+    .duel-banner-card { padding: 30px 20px; }
     .duel-banner-content-inner h3 { font-size: 1.7rem; letter-spacing: 1px; }
     .duel-banner-content-inner .highlight-neon { font-size: 1.9rem; }
     .duel-banner-content-inner .duel-sub-badge { padding: 6px 16px; font-size: 0.9rem; margin: 5px 0 15px; }
@@ -545,21 +545,21 @@
     .toc-links { grid-template-columns: 1fr; }
   }
 
-  /* ─── FULL WIDTH LIVE DUEL BANNER ─── */
-  .duel-banner-full-width {
+  /* ─── LIVE DUEL BANNER CARD ─── */
+  .duel-banner-card {
     width: 100%;
     background: linear-gradient(135deg, rgba(13, 30, 54, 0.95) 0%, rgba(240, 160, 48, 0.25) 50%, rgba(255, 74, 74, 0.2) 100%);
-    border-top: 2px solid rgba(240, 160, 48, 0.6);
-    border-bottom: 2px solid rgba(255, 74, 74, 0.4);
-    box-shadow: 0 15px 40px rgba(240, 160, 48, 0.2), 0 -10px 30px rgba(13, 30, 54, 0.5);
-    margin: 0 0 50px;
-    padding: 50px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    margin: 0 auto 35px;
+    padding: 40px 30px;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(12px);
     transition: var(--transition);
   }
-  .duel-banner-full-width::before {
+  .duel-banner-card::before {
     content: '';
     position: absolute;
     top: -50%;
@@ -569,13 +569,11 @@
     background: radial-gradient(circle, rgba(240, 160, 48, 0.12) 0%, transparent 60%);
     pointer-events: none;
   }
-  .duel-banner-full-width:hover {
+  .duel-banner-card:hover {
+    border-color: var(--border-hover);
     box-shadow: 0 20px 50px rgba(240, 160, 48, 0.35), 0 0 30px rgba(255, 74, 74, 0.25);
   }
   .duel-banner-content-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 24px;
     position: relative;
     z-index: 2;
     text-align: center;
@@ -667,10 +665,10 @@
 <div class="stars"></div>
 <canvas id="gearCanvas"></canvas>
 
-<div class="container" style="padding-bottom: 0;">
+<div class="container">
 
   <!-- NAVIGATION HEADER -->
-  <header class="nav-header" style="margin-bottom: 0; border-bottom: none; min-height: 160px;">
+  <header class="nav-header" style="margin-bottom: 20px; border-bottom: none; min-height: 160px;">
     <span class="dev-badge">İlhan Mehmet Altuntaş</span>
     
     <!-- ROTATING LOGO/ROBOT CONTAINER -->
@@ -691,10 +689,8 @@
     </div>
   </header>
 
-  </div> <!-- /container -->
-
   <!-- LIVE DUEL BANNER -->
-  <div class="duel-banner-full-width">
+  <div class="duel-banner-card">
     <div class="duel-banner-content-inner">
       <div class="vs-badge">VS</div>
       <h3 id="duel-banner-title">Gear Blast’ta Yeni Dönem: <span class="highlight-neon">Canlı Düellolar</span> Başladı!</h3>
@@ -704,8 +700,6 @@
       <a href="https://play.google.com/store/apps/details?id=com.gearblast.game" class="duel-cta-btn" id="duel-cta-btn">Hemen Gear Blast'a gir, düelloyu başlat!</a>
     </div>
   </div>
-
-  <div class="container">
 
     <!-- MEYDAN OKUMA VE TAVUK (TR) -->
     <div class="guide-section" id="challenge-rules-sec" style="margin-top: 20px;">
