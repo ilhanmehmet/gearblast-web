@@ -2003,7 +2003,7 @@
   }
   anim();
 
-  // Reset scroll position on page load and clear hash to prevent auto-scrolling
+  // Reset scroll position and attach TOC click handlers on DOM content load
   if (history.scrollRestoration) {
     history.scrollRestoration = 'manual';
   }
@@ -2014,19 +2014,39 @@
       }
     }
     window.scrollTo(0, 0);
+
+    // Attach click handlers to TOC links
+    document.querySelectorAll('.toc-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          const sectionId = href.substring(1);
+          if (sectionId === 'challenge-rules-sec') {
+            // Smooth scroll to challenge rules on page
+            e.preventDefault();
+            const target = document.getElementById(currentLang === 'en' ? 'challenge-rules-sec-en' : 'challenge-rules-sec');
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+            return;
+          }
+          e.preventDefault();
+          openModal(sectionId);
+        }
+      });
+    });
   });
 
-  // Modal open & close logic
-  const modal = document.getElementById('guide-modal');
-  const modalContent = document.getElementById('modal-content-body');
-
+  // Modal open & close logic (accessed dynamically to prevent script load timing issues)
   function openModal(sectionId) {
+    const modal = document.getElementById('guide-modal');
+    const modalContent = document.getElementById('modal-content-body');
     let targetId = sectionId;
     if (currentLang === 'en') {
       targetId = sectionId + '-en';
     }
     const sectionElement = document.getElementById(targetId);
-    if (sectionElement) {
+    if (sectionElement && modal && modalContent) {
       modalContent.innerHTML = sectionElement.innerHTML;
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -2034,37 +2054,21 @@
   }
 
   function closeModal() {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-    modalContent.innerHTML = '';
+    const modal = document.getElementById('guide-modal');
+    const modalContent = document.getElementById('modal-content-body');
+    if (modal && modalContent) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      modalContent.innerHTML = '';
+    }
   }
 
   // Close modal when clicking outside the card
   window.addEventListener('click', (e) => {
-    if (e.target === modal) {
+    const modal = document.getElementById('guide-modal');
+    if (modal && e.target === modal) {
       closeModal();
     }
-  });
-
-  // Attach click handlers to TOC links
-  document.querySelectorAll('.toc-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const href = link.getAttribute('href');
-      if (href && href.startsWith('#')) {
-        const sectionId = href.substring(1);
-        if (sectionId === 'challenge-rules-sec') {
-          // Smooth scroll to challenge rules on page
-          e.preventDefault();
-          const target = document.getElementById(currentLang === 'en' ? 'challenge-rules-sec-en' : 'challenge-rules-sec');
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-          }
-          return;
-        }
-        e.preventDefault();
-        openModal(sectionId);
-      }
-    });
   });
 </script>
 
