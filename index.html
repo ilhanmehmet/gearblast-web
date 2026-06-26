@@ -586,19 +586,20 @@
     margin: 0 auto 35px;
     padding: 40px 30px;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     backdrop-filter: blur(12px);
     transition: var(--transition);
   }
   .duel-banner-card::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(240, 160, 48, 0.12) 0%, transparent 60%);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(240, 160, 48, 0.12) 0%, transparent 70%);
     pointer-events: none;
+    border-radius: inherit;
   }
   .duel-banner-card:hover {
     border-color: var(--border-hover);
@@ -629,15 +630,27 @@
   /* Desktop positioning */
   .banner-mini-duel.left-side {
     position: absolute;
-    left: 40px;
+    left: 25px;
     top: 50%;
     transform: translateY(-50%);
   }
   .banner-mini-duel.right-side {
     position: absolute;
-    right: 40px;
+    right: 25px;
     top: 50%;
     transform: translateY(-50%);
+  }
+
+  /* Wide screens: position mini duels completely outside the banner card */
+  @media (min-width: 1300px) {
+    .banner-mini-duel.left-side {
+      right: calc(100% + 30px);
+      left: auto;
+    }
+    .banner-mini-duel.right-side {
+      left: calc(100% + 30px);
+      right: auto;
+    }
   }
 
   /* Mini avatars styling */
@@ -1682,7 +1695,7 @@
 
     // Run immediately and repeat on cycle
     triggerDuel();
-    setInterval(triggerDuel, 6500);
+    setInterval(triggerDuel, 4000);
   });
 
   // ─── LANGUAGE TOGGLE ───
