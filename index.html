@@ -359,6 +359,93 @@
     border-color: var(--border-hover);
     box-shadow: 0 15px 40px rgba(74, 184, 240, 0.08);
   }
+
+  /* Hide standard guide sections on the main page flow */
+  #content-tr .guide-section:not(#challenge-rules-sec),
+  #content-en .guide-section:not(#challenge-rules-sec-en) {
+    display: none;
+  }
+
+  /* ─── MODAL POPUP WINDOW ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 10, 22, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal-card {
+    background: linear-gradient(135deg, #0d1e36 0%, #040a16 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 30px rgba(74, 184, 240, 0.25);
+    width: 90%;
+    max-width: 750px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 40px 30px 30px;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+  }
+  .modal-overlay.active .modal-card {
+    transform: scale(1);
+  }
+  .modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: var(--transition);
+    line-height: 1;
+  }
+  .modal-close-btn:hover {
+    color: var(--red);
+    transform: rotate(90deg);
+  }
+  
+  /* Custom scrollbar inside modal */
+  .modal-card::-webkit-scrollbar {
+    width: 8px;
+  }
+  .modal-card::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.01);
+  }
+  .modal-card::-webkit-scrollbar-thumb {
+    background: rgba(74, 184, 240, 0.25);
+    border-radius: 4px;
+  }
+  .modal-card::-webkit-scrollbar-thumb:hover {
+    background: rgba(74, 184, 240, 0.45);
+  }
+
+  /* Override guide section styles inside the modal */
+  #modal-content-body .guide-section {
+    display: block !important;
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    margin-bottom: 0;
+  }
+  #modal-content-body .guide-section:hover {
+    box-shadow: none;
+    border: none;
+  }
   .guide-section h2 {
     font-size: 1.5rem;
     font-weight: 800;
@@ -1928,6 +2015,66 @@
     }
     window.scrollTo(0, 0);
   });
+
+  // Modal open & close logic
+  const modal = document.getElementById('guide-modal');
+  const modalContent = document.getElementById('modal-content-body');
+
+  function openModal(sectionId) {
+    let targetId = sectionId;
+    if (currentLang === 'en') {
+      targetId = sectionId + '-en';
+    }
+    const sectionElement = document.getElementById(targetId);
+    if (sectionElement) {
+      modalContent.innerHTML = sectionElement.innerHTML;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    modalContent.innerHTML = '';
+  }
+
+  // Close modal when clicking outside the card
+  window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Attach click handlers to TOC links
+  document.querySelectorAll('.toc-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const sectionId = href.substring(1);
+        if (sectionId === 'challenge-rules-sec') {
+          // Smooth scroll to challenge rules on page
+          e.preventDefault();
+          const target = document.getElementById(currentLang === 'en' ? 'challenge-rules-sec-en' : 'challenge-rules-sec');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+          return;
+        }
+        e.preventDefault();
+        openModal(sectionId);
+      }
+    });
+  });
 </script>
+
+<!-- GUIDE MODAL POPUP -->
+<div id="guide-modal" class="modal-overlay">
+  <div class="modal-card">
+    <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+    <div id="modal-content-body"></div>
+  </div>
+</div>
+
 </body>
 </html>
