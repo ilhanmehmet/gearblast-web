@@ -76,12 +76,14 @@
 
   /* ─── STICKY HEADER ─── */
   header.nav-header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0;
-    margin-bottom: 30px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 10px 0;
+    margin-bottom: 0;
+    border-bottom: none;
+    min-height: 160px;
   }
   .dev-badge {
     font-size: 0.8rem;
@@ -124,16 +126,85 @@
     flex-direction: column;
     align-items: center;
   }
-  .logo {
-    max-width: 200px;
-    height: auto;
-    filter: drop-shadow(0 0 20px rgba(74, 184, 240, 0.4));
-    animation: floatLogo 6s ease-in-out infinite;
-    margin-bottom: 24px;
+  /* ─── ROTATING LOGO/ROBOT ─── */
+  .logo-flip-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    perspective: 1000px;
+    z-index: 100;
   }
-  @keyframes floatLogo {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+  .logo-flip-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotateLogoRobot 8s infinite ease-in-out;
+  }
+  .logo-flip-front, .logo-flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-flip-front {
+    transform: rotateY(0deg);
+  }
+  .logo-flip-back {
+    transform: rotateY(180deg);
+  }
+  .header-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(74, 184, 240, 0.4));
+  }
+  @keyframes rotateLogoRobot {
+    0%, 20% {
+      transform: rotateY(0deg);
+    }
+    25%, 45% {
+      transform: rotateY(180deg);
+    }
+    50%, 70% {
+      transform: rotateY(360deg);
+    }
+    75%, 95% {
+      transform: rotateY(540deg);
+    }
+    100% {
+      transform: rotateY(720deg);
+    }
+  }
+
+  /* ─── BACKGROUND ROBOTS ─── */
+  .bg-robot-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .bg-robot {
+    filter: drop-shadow(0 0 8px rgba(74, 184, 240, 0.2));
+    transition: opacity 0.5s;
+  }
+  @keyframes floatRobotBg {
+    0%, 100% {
+      transform: translateY(0) rotate(var(--rbt-rot));
+    }
+    50% {
+      transform: translateY(-20px) rotate(var(--rbt-rot-offset));
+    }
   }
   .hero h1 {
     font-size: 3rem;
@@ -596,18 +667,24 @@
 <div class="stars"></div>
 <canvas id="gearCanvas"></canvas>
 
-<div class="container">
-
-  <!-- LOGO -->
-  <div style="text-align: center; margin-top: 10px;">
-    <img src="logo_icon.png" alt="Gear Blast Logo" class="logo" style="margin-bottom: 0;">
-  </div>
-
-  <br><br><br>
+<div class="container" style="padding-bottom: 0;">
 
   <!-- NAVIGATION HEADER -->
-  <header class="nav-header" style="margin-top: 0;">
+  <header class="nav-header" style="margin-bottom: 0; border-bottom: none; min-height: 160px;">
     <span class="dev-badge">İlhan Mehmet Altuntaş</span>
+    
+    <!-- ROTATING LOGO/ROBOT CONTAINER -->
+    <div class="logo-flip-container">
+      <div class="logo-flip-card">
+        <div class="logo-flip-front">
+          <img src="logo_icon.png" alt="Gear Blast Logo" class="header-logo">
+        </div>
+        <div class="logo-flip-back">
+          <img src="grblst_rbt.png" alt="Gear Blast Robot" class="header-logo">
+        </div>
+      </div>
+    </div>
+
     <div class="lang-switcher" onclick="toggleLanguage()">
       <button class="lang-btn active" id="btn-lang-tr">TR</button>
       <button class="lang-btn" id="btn-lang-en">EN</button>
@@ -1323,8 +1400,51 @@
   </footer>
 
 </div>
-
 <script>
+  // ─── DYNAMIC BACKGROUND ROBOTS ───
+  document.addEventListener('DOMContentLoaded', () => {
+    const body = document.body;
+    const numRobots = 35; // 35 background robots
+    
+    const robotContainer = document.createElement('div');
+    robotContainer.className = 'bg-robot-container';
+    body.appendChild(robotContainer);
+
+    for (let i = 0; i < numRobots; i++) {
+      const rbtNum = Math.floor(Math.random() * 85) + 1; // Random robot from rbt_1.png to rbt_85.png
+      const img = document.createElement('img');
+      img.src = `rbt/rbt_${rbtNum}.png`;
+      img.className = 'bg-robot';
+      
+      // Random size: 40px to 100px
+      const size = Math.floor(Math.random() * 60) + 40;
+      img.style.width = `${size}px`;
+      img.style.height = 'auto';
+      
+      // Random position
+      img.style.position = 'absolute';
+      img.style.left = `${Math.random() * 96 + 2}%`;
+      img.style.top = `${Math.random() * 96 + 2}%`;
+      
+      // Random rotation and low opacity
+      const rotation = Math.floor(Math.random() * 360);
+      const opacity = Math.random() * 0.05 + 0.04; // Very subtle: 0.04 to 0.09
+      img.style.opacity = opacity;
+      
+      // Set custom properties for rotation animation
+      img.style.setProperty('--rbt-rot', `${rotation}deg`);
+      img.style.setProperty('--rbt-rot-offset', `${rotation + 10}deg`);
+      
+      // Random float animation timing
+      const animDuration = Math.random() * 12 + 8; // 8s to 20s
+      const animDelay = Math.random() * -20;
+      img.style.animation = `floatRobotBg ${animDuration}s infinite ease-in-out`;
+      img.style.animationDelay = `${animDelay}s`;
+      
+      robotContainer.appendChild(img);
+    }
+  });
+
   // ─── LANGUAGE TOGGLE ───
   let currentLang = 'tr';
 
