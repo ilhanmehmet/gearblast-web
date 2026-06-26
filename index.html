@@ -267,8 +267,9 @@
     gap: 8px;
   }
   .toc-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
   }
   .toc-link {
@@ -539,7 +540,7 @@
     .hero h1 { font-size: 2.2rem; }
     .hero h2 { font-size: 1.1rem; }
     .guide-section { padding: 20px; }
-    .toc-links { grid-template-columns: 1fr 1fr; }
+    .toc-links { align-items: stretch; }
     .duel-banner-card { padding: 30px 20px; }
     .duel-banner-content-inner { max-width: 100%; }
     .duel-banner-content-inner h3 { font-size: 1.7rem; letter-spacing: 1px; }
@@ -565,7 +566,7 @@
     }
   }
   @media (max-width: 480px) {
-    .toc-links { grid-template-columns: 1fr; }
+
     .mini-avatar-wrapper {
       width: 50px;
       height: 50px;
