@@ -246,6 +246,10 @@
   }
 
   /* ─── TABLE OF CONTENTS (İÇİNDEKİLER) ─── */
+  .duel-section-wrapper {
+    position: relative;
+    width: 100%;
+  }
   .toc-container {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -254,6 +258,7 @@
     margin-bottom: 40px;
     backdrop-filter: blur(12px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: var(--transition);
   }
   .toc-title {
     font-size: 1.05rem;
@@ -285,12 +290,31 @@
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,255,255,0.05);
     transition: var(--transition);
+    width: 100%;
   }
   .toc-link:hover {
     color: #fff;
     border-color: var(--blue);
     background: rgba(74, 184, 240, 0.08);
     transform: translateX(4px);
+  }
+
+  /* Wide screens: position TOC container on the left of the banner */
+  @media (min-width: 1300px) {
+    .toc-container {
+      position: absolute;
+      right: calc(100% + 20px);
+      top: 130px; /* Sits below the left avatars (which are at top: 20px) */
+      width: 200px;
+      margin-bottom: 0;
+      z-index: 100;
+    }
+  }
+  @media (min-width: 1500px) {
+    .toc-container {
+      right: calc(100% + 30px);
+      width: 240px;
+    }
   }
 
   /* ─── PLAYER GUIDE SECTIONS ─── */
@@ -647,12 +671,28 @@
   /* Wide screens: position mini duels completely outside the banner card */
   @media (min-width: 1300px) {
     .banner-mini-duel.left-side {
-      right: calc(100% + 30px);
+      right: calc(100% + 20px);
       left: auto;
+      top: 20px;
+      transform: none;
+    }
+    .banner-mini-duel.right-side {
+      left: calc(100% + 20px);
+      right: auto;
+      top: 20px;
+      transform: none;
+    }
+  }
+  @media (min-width: 1500px) {
+    .banner-mini-duel.left-side {
+      right: calc(100% + 30px);
+      top: 20px;
+      transform: none;
     }
     .banner-mini-duel.right-side {
       left: calc(100% + 30px);
-      right: auto;
+      top: 20px;
+      transform: none;
     }
   }
 
@@ -854,45 +894,78 @@
     </div>
   </header>
 
-  <!-- LIVE DUEL BANNER -->
-  <div class="duel-banner-card">
-    
-    <!-- MINI DUELS WRAPPER -->
-    <div class="banner-duels-wrapper">
-      <!-- LEFT MINI DUEL -->
-      <div id="banner-mini-duel-left" class="banner-mini-duel left-side">
-        <div class="mini-avatar-wrapper left-left">
-          <img id="avatar-ll-img" class="mini-avatar-img" src="avatars/a-1.png" alt="Player LL">
+  <!-- LIVE DUEL BANNER SECTION WRAPPER -->
+  <div class="duel-section-wrapper">
+    <!-- LIVE DUEL BANNER -->
+    <div class="duel-banner-card">
+      
+      <!-- MINI DUELS WRAPPER -->
+      <div class="banner-duels-wrapper">
+        <!-- LEFT MINI DUEL -->
+        <div id="banner-mini-duel-left" class="banner-mini-duel left-side">
+          <div class="mini-avatar-wrapper left-left">
+            <img id="avatar-ll-img" class="mini-avatar-img" src="avatars/a-1.png" alt="Player LL">
+          </div>
+          <div id="vs-left" class="mini-vs-text">VS</div>
+          <div class="mini-avatar-wrapper left-right">
+            <img id="avatar-lr-img" class="mini-avatar-img" src="avatars/a2.png" alt="Player LR">
+          </div>
         </div>
-        <div id="vs-left" class="mini-vs-text">VS</div>
-        <div class="mini-avatar-wrapper left-right">
-          <img id="avatar-lr-img" class="mini-avatar-img" src="avatars/a2.png" alt="Player LR">
+        
+        <!-- RIGHT MINI DUEL -->
+        <div id="banner-mini-duel-right" class="banner-mini-duel right-side">
+          <div class="mini-avatar-wrapper right-left">
+            <img id="avatar-rl-img" class="mini-avatar-img" src="avatars/a3.png" alt="Player RL">
+          </div>
+          <div id="vs-right" class="mini-vs-text">VS</div>
+          <div class="mini-avatar-wrapper right-right">
+            <img id="avatar-rr-img" class="mini-avatar-img" src="avatars/a4.png" alt="Player RR">
+          </div>
         </div>
       </div>
-      
-      <!-- RIGHT MINI DUEL -->
-      <div id="banner-mini-duel-right" class="banner-mini-duel right-side">
-        <div class="mini-avatar-wrapper right-left">
-          <img id="avatar-rl-img" class="mini-avatar-img" src="avatars/a3.png" alt="Player RL">
-        </div>
-        <div id="vs-right" class="mini-vs-text">VS</div>
-        <div class="mini-avatar-wrapper right-right">
-          <img id="avatar-rr-img" class="mini-avatar-img" src="avatars/a4.png" alt="Player RR">
-        </div>
+
+      <div class="duel-banner-content-inner">
+        <div class="vs-badge" id="banner-vs-badge">VS</div>
+        <h3 id="duel-banner-title">Gear Blast’ta Yeni Dönem: <span class="highlight-neon">Canlı Düellolar</span> Başladı!</h3>
+        <div class="duel-sub-badge" id="duel-banner-sub-badge">MEYDAN OKU DÜELLOYU BAŞLAT</div>
+        
+        <!-- FIGHT FLASH TEXT OVERLAY -->
+        <div id="banner-fight-text" class="fight-overlay-text">DÜELLO!</div>
+
+        <p id="duel-banner-highlight" class="highlight-text">En iyi kim? Sen mi, arkadaşın mı? Artık tahminleri bırak, Gerçek Zamanlı Düello sistemiyle sahneye çık!</p>
+        <p id="duel-banner-desc">Arkadaşlarını canlı mücadeleye davet et, zekanı konuştur ve rekabetin tadını çıkar. Sınırları aşmak istersen, küresel şampiyonada tüm dünyaya meydan oku! Eğlenceyi stratejiyle birleştir, skor tablosunun zirvesine yerleş ve şampiyonluğunu ilan et.</p>
+        <a href="https://play.google.com/store/apps/details?id=com.gearblast.game" class="duel-cta-btn" id="duel-cta-btn">Hemen Gear Blast'a gir, düelloyu başlat!</a>
       </div>
     </div>
 
-    <div class="duel-banner-content-inner">
-      <div class="vs-badge" id="banner-vs-badge">VS</div>
-      <h3 id="duel-banner-title">Gear Blast’ta Yeni Dönem: <span class="highlight-neon">Canlı Düellolar</span> Başladı!</h3>
-      <div class="duel-sub-badge" id="duel-banner-sub-badge">MEYDAN OKU DÜELLOYU BAŞLAT</div>
-      
-      <!-- FIGHT FLASH TEXT OVERLAY -->
-      <div id="banner-fight-text" class="fight-overlay-text">DÜELLO!</div>
-
-      <p id="duel-banner-highlight" class="highlight-text">En iyi kim? Sen mi, arkadaşın mı? Artık tahminleri bırak, Gerçek Zamanlı Düello sistemiyle sahneye çık!</p>
-      <p id="duel-banner-desc">Arkadaşlarını canlı mücadeleye davet et, zekanı konuştur ve rekabetin tadını çıkar. Sınırları aşmak istersen, küresel şampiyonada tüm dünyaya meydan oku! Eğlenceyi stratejiyle birleştir, skor tablosunun zirvesine yerleş ve şampiyonluğunu ilan et.</p>
-      <a href="https://play.google.com/store/apps/details?id=com.gearblast.game" class="duel-cta-btn" id="duel-cta-btn">Hemen Gear Blast'a gir, düelloyu başlat!</a>
+    <!-- TABLE OF CONTENTS (İÇİNDEKİLER) -->
+    <div class="toc-container">
+      <div class="toc-title">
+        <span class="icon">📖</span>
+        <span id="toc-header-text">İçindekiler / Hızlı Bağlantılar</span>
+      </div>
+      <div class="toc-links">
+        <a href="#how-to-play-sec" class="toc-link">
+          <span class="icon">⚙️</span>
+          <span id="toc-rules-text">Nasıl Oynanır?</span>
+        </a>
+        <a href="#game-modes-sec" class="toc-link">
+          <span class="icon">🎮</span>
+          <span id="toc-modes-text">Oyun Modları</span>
+        </a>
+        <a href="#badges-leagues-sec" class="toc-link">
+          <span class="icon">🎖️</span>
+          <span id="toc-badges-text">Rozetler &amp; Ligler</span>
+        </a>
+        <a href="#challenge-rules-sec" class="toc-link">
+          <span class="icon">⚔️</span>
+          <span id="toc-challenge-text">Meydan Okuma</span>
+        </a>
+        <a href="#faq-sec" class="toc-link">
+          <span class="icon">❓</span>
+          <span id="toc-faq-text">Sık Sorulan Sorular</span>
+        </a>
+      </div>
     </div>
   </div>
 
@@ -992,35 +1065,7 @@
     </a>
   </section>
 
-  <!-- TABLE OF CONTENTS (İÇİNDEKİLER) -->
-  <div class="toc-container">
-    <div class="toc-title">
-      <span class="icon">📖</span>
-      <span id="toc-header-text">İçindekiler / Hızlı Bağlantılar</span>
-    </div>
-    <div class="toc-links">
-      <a href="#how-to-play-sec" class="toc-link">
-        <span class="icon">⚙️</span>
-        <span id="toc-rules-text">Nasıl Oynanır?</span>
-      </a>
-      <a href="#game-modes-sec" class="toc-link">
-        <span class="icon">🎮</span>
-        <span id="toc-modes-text">Oyun Modları</span>
-      </a>
-      <a href="#badges-leagues-sec" class="toc-link">
-        <span class="icon">🎖️</span>
-        <span id="toc-badges-text">Rozetler &amp; Ligler</span>
-      </a>
-      <a href="#challenge-rules-sec" class="toc-link">
-        <span class="icon">⚔️</span>
-        <span id="toc-challenge-text">Meydan Okuma</span>
-      </a>
-      <a href="#faq-sec" class="toc-link">
-        <span class="icon">❓</span>
-        <span id="toc-faq-text">Sık Sorulan Sorular</span>
-      </a>
-    </div>
-  </div>
+
 
   <!-- ══════════════════ TURKISH CONTENT ══════════════════ -->
   <div id="content-tr">
