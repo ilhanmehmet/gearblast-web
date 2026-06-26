@@ -306,12 +306,12 @@
     transform: translateX(4px);
   }
 
-  /* Wide screens: position left-sidebar on the left of the banner */
+  /* Wide screens: position left-sidebar on the far left of the screen */
   @media (min-width: 1300px) {
     .left-sidebar {
-      position: absolute;
-      right: calc(100% + 20px);
-      top: 0px; /* Align to the very top-left of the banner */
+      position: fixed;
+      left: 20px;
+      top: 160px; /* Align nicely from the top of the viewport */
       width: 200px;
       margin-bottom: 0;
       z-index: 100;
@@ -339,7 +339,7 @@
   }
   @media (min-width: 1500px) {
     .left-sidebar {
-      right: calc(100% + 30px);
+      left: 40px;
       width: 240px;
     }
   }
@@ -698,28 +698,12 @@
   /* Wide screens: position mini duels completely outside the banner card */
   @media (min-width: 1300px) {
     .banner-mini-duel.left-side {
-      right: calc(100% + 20px);
-      left: auto;
-      top: 470px;
-      transform: none;
-    }
-    .banner-mini-duel.right-side {
-      left: calc(100% + 20px);
-      right: auto;
-      top: 470px;
-      transform: none;
-    }
-  }
-  @media (min-width: 1500px) {
-    .banner-mini-duel.left-side {
       right: calc(100% + 30px);
-      top: 470px;
-      transform: none;
+      left: auto;
     }
     .banner-mini-duel.right-side {
       left: calc(100% + 30px);
-      top: 470px;
-      transform: none;
+      right: auto;
     }
   }
 
