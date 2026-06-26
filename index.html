@@ -245,17 +245,24 @@
     box-shadow: 0 0 30px rgba(240, 160, 48, 0.5);
   }
 
-  /* ─── TABLE OF CONTENTS (İÇİNDEKİLER) ─── */
+  /* ─── LEFT SIDEBAR (HERO & İÇİNDEKİLER) ─── */
   .duel-section-wrapper {
     position: relative;
     width: 100%;
+  }
+  .left-sidebar {
+    width: 100%;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
   .toc-container {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 0;
     backdrop-filter: blur(12px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     transition: var(--transition);
@@ -299,19 +306,39 @@
     transform: translateX(4px);
   }
 
-  /* Wide screens: position TOC container on the left of the banner */
+  /* Wide screens: position left-sidebar on the left of the banner */
   @media (min-width: 1300px) {
-    .toc-container {
+    .left-sidebar {
       position: absolute;
       right: calc(100% + 20px);
-      top: 130px; /* Sits below the left avatars (which are at top: 20px) */
+      top: 0px; /* Align to the very top-left of the banner */
       width: 200px;
       margin-bottom: 0;
       z-index: 100;
     }
+    .left-sidebar .hero {
+      padding: 0;
+      text-align: center;
+      align-items: center;
+    }
+    .left-sidebar .hero h1 {
+      font-size: 1.8rem;
+      margin-bottom: 4px;
+    }
+    .left-sidebar .hero h2 {
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+    .left-sidebar .hero .download-btn {
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      width: 100%;
+      justify-content: center;
+    }
   }
   @media (min-width: 1500px) {
-    .toc-container {
+    .left-sidebar {
       right: calc(100% + 30px);
       width: 240px;
     }
@@ -673,25 +700,25 @@
     .banner-mini-duel.left-side {
       right: calc(100% + 20px);
       left: auto;
-      top: 20px;
+      top: 470px;
       transform: none;
     }
     .banner-mini-duel.right-side {
       left: calc(100% + 20px);
       right: auto;
-      top: 20px;
+      top: 470px;
       transform: none;
     }
   }
   @media (min-width: 1500px) {
     .banner-mini-duel.left-side {
       right: calc(100% + 30px);
-      top: 20px;
+      top: 470px;
       transform: none;
     }
     .banner-mini-duel.right-side {
       left: calc(100% + 30px);
-      top: 20px;
+      top: 470px;
       transform: none;
     }
   }
@@ -938,33 +965,46 @@
       </div>
     </div>
 
-    <!-- TABLE OF CONTENTS (İÇİNDEKİLER) -->
-    <div class="toc-container">
-      <div class="toc-title">
-        <span class="icon">📖</span>
-        <span id="toc-header-text">İçindekiler / Hızlı Bağlantılar</span>
-      </div>
-      <div class="toc-links">
-        <a href="#how-to-play-sec" class="toc-link">
-          <span class="icon">⚙️</span>
-          <span id="toc-rules-text">Nasıl Oynanır?</span>
-        </a>
-        <a href="#game-modes-sec" class="toc-link">
+    <!-- LEFT SIDEBAR -->
+    <div class="left-sidebar">
+      <!-- HERO SECTION -->
+      <section class="hero">
+        <h1>Gear Blast</h1>
+        <h2>: Block Puzzle</h2>
+        <a href="https://play.google.com/store/apps/details?id=com.gearblast.game" class="download-btn" id="play-store-btn">
           <span class="icon">🎮</span>
-          <span id="toc-modes-text">Oyun Modları</span>
+          <span id="btn-dl-text">Google Play'den İndir</span>
         </a>
-        <a href="#badges-leagues-sec" class="toc-link">
-          <span class="icon">🎖️</span>
-          <span id="toc-badges-text">Rozetler &amp; Ligler</span>
-        </a>
-        <a href="#challenge-rules-sec" class="toc-link">
-          <span class="icon">⚔️</span>
-          <span id="toc-challenge-text">Meydan Okuma</span>
-        </a>
-        <a href="#faq-sec" class="toc-link">
-          <span class="icon">❓</span>
-          <span id="toc-faq-text">Sık Sorulan Sorular</span>
-        </a>
+      </section>
+
+      <!-- TABLE OF CONTENTS (İÇİNDEKİLER) -->
+      <div class="toc-container">
+        <div class="toc-title">
+          <span class="icon">📖</span>
+          <span id="toc-header-text">İçindekiler / Hızlı Bağlantılar</span>
+        </div>
+        <div class="toc-links">
+          <a href="#how-to-play-sec" class="toc-link">
+            <span class="icon">⚙️</span>
+            <span id="toc-rules-text">Nasıl Oynanır?</span>
+          </a>
+          <a href="#game-modes-sec" class="toc-link">
+            <span class="icon">🎮</span>
+            <span id="toc-modes-text">Oyun Modları</span>
+          </a>
+          <a href="#badges-leagues-sec" class="toc-link">
+            <span class="icon">🎖️</span>
+            <span id="toc-badges-text">Rozetler &amp; Ligler</span>
+          </a>
+          <a href="#challenge-rules-sec" class="toc-link">
+            <span class="icon">⚔️</span>
+            <span id="toc-challenge-text">Meydan Okuma</span>
+          </a>
+          <a href="#faq-sec" class="toc-link">
+            <span class="icon">❓</span>
+            <span id="toc-faq-text">Sık Sorulan Sorular</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -1054,16 +1094,6 @@
 
       <p style="font-weight: bold; color: #ff4a4a; margin-top: 15px;">"Remember, if you have a Chicken Avatar, you cannot challenge others and duel"</p>
     </div>
-
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <h1>Gear Blast</h1>
-    <h2>: Block Puzzle</h2>
-    <a href="https://play.google.com/store/apps/details?id=com.gearblast.game" class="download-btn" id="play-store-btn">
-      <span class="icon">🎮</span>
-      <span id="btn-dl-text">Google Play'den İndir</span>
-    </a>
-  </section>
 
 
 
