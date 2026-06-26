@@ -1915,6 +1915,19 @@
     requestAnimationFrame(anim);
   }
   anim();
+
+  // Reset scroll position on page load and clear hash to prevent auto-scrolling
+  if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual';
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.hash) {
+      if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.pathname + window.location.search);
+      }
+    }
+    window.scrollTo(0, 0);
+  });
 </script>
 </body>
 </html>
