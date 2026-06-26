@@ -528,10 +528,10 @@
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 960px) {
-    .banner-avatar-wrapper.left-side.slide-in {
+    .banner-mini-duel.left-side {
       left: 15px;
     }
-    .banner-avatar-wrapper.right-side.slide-in {
+    .banner-mini-duel.right-side {
       right: 15px;
     }
   }
@@ -549,11 +549,31 @@
     .duel-banner-content-inner .highlight-text { font-size: 1.25rem; margin: 15px 0; }
     .duel-banner-content-inner .vs-badge { font-size: 5rem; right: 10px; }
     .duel-cta-btn { padding: 12px 30px; font-size: 1rem; }
-    .banner-avatar-wrapper { display: none !important; }
-    .mobile-avatar-row { display: flex; }
+    .banner-duels-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .banner-mini-duel.left-side,
+    .banner-mini-duel.right-side {
+      position: static;
+      transform: none;
+    }
   }
   @media (max-width: 480px) {
     .toc-links { grid-template-columns: 1fr; }
+    .mini-avatar-wrapper {
+      width: 50px;
+      height: 50px;
+    }
+    .banner-duels-wrapper {
+      gap: 15px;
+    }
+    .mini-vs-text {
+      font-size: 1.1rem;
+    }
   }
 
   /* ─── LIVE DUEL BANNER CARD ─── */
@@ -592,83 +612,86 @@
     margin: 0 auto;
   }
 
-  /* ─── DESKTOP AVATARS ─── */
-  .banner-avatar-wrapper {
+  /* ─── MINI DUELS CONTAINER & WRAPPER ─── */
+  .banner-duels-wrapper {
+    position: relative;
+    width: 100%;
+    z-index: 5;
+  }
+  .banner-mini-duel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.5s ease-in-out;
+  }
+  
+  /* Desktop positioning */
+  .banner-mini-duel.left-side {
     position: absolute;
+    left: 40px;
     top: 50%;
     transform: translateY(-50%);
-    width: 120px;
+  }
+  .banner-mini-duel.right-side {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* Mini avatars styling */
+  .mini-avatar-wrapper {
+    width: 65px;
+    height: 65px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    z-index: 5;
+    justify-content: center;
     transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
     opacity: 0;
   }
-  .banner-avatar-wrapper.left-side {
-    left: -150px;
+  .mini-avatar-wrapper.left-left, .mini-avatar-wrapper.right-left {
+    transform: translateX(-60px);
   }
-  .banner-avatar-wrapper.left-side.slide-in {
-    left: 40px;
+  .mini-avatar-wrapper.left-right, .mini-avatar-wrapper.right-right {
+    transform: translateX(60px);
+  }
+  
+  /* When parent has slide-in class */
+  .banner-mini-duel.slide-in .mini-avatar-wrapper {
+    transform: translateX(0) !important;
     opacity: 1;
   }
-  .banner-avatar-wrapper.right-side {
-    right: -150px;
-  }
-  .banner-avatar-wrapper.right-side.slide-in {
-    right: 40px;
-    opacity: 1;
-  }
-  .banner-avatar-img {
-    width: 110px;
-    height: 110px;
+  
+  .mini-avatar-img {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    border: 3px solid rgba(74, 184, 240, 0.8);
-    box-shadow: 0 0 20px rgba(74, 184, 240, 0.4);
+    border: 2px solid rgba(74, 184, 240, 0.8);
+    box-shadow: 0 0 12px rgba(74, 184, 240, 0.4);
     background: rgba(13, 30, 54, 0.8);
     object-fit: contain;
-    padding: 5px;
+    padding: 3px;
   }
-  .banner-avatar-wrapper.right-side .banner-avatar-img {
+  /* Give right avatar in each duel a red theme for contrast */
+  .mini-avatar-wrapper.left-right .mini-avatar-img,
+  .mini-avatar-wrapper.right-right .mini-avatar-img {
     border-color: rgba(255, 74, 74, 0.8);
-    box-shadow: 0 0 20px rgba(255, 74, 74, 0.4);
-  }
-  .avatar-name {
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: #fff;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.8);
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    box-shadow: 0 0 12px rgba(255, 74, 74, 0.4);
   }
 
-  /* ─── SPINNING GEARS IN AVATAR BACKGROUND ─── */
-  .avatar-gear-bg, .avatar-gear-bg-opp {
-    position: absolute;
-    width: 140px;
-    height: 140px;
-    top: -15px;
-    background-image: url('logo_icon.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.12;
-    z-index: -1;
-    pointer-events: none;
+  .mini-vs-text {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #ff4a4a;
+    text-shadow: 0 0 10px rgba(255, 74, 74, 0.8);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(0);
+    opacity: 0;
   }
-  .avatar-gear-bg {
-    animation: spinGearBg 12s infinite linear;
-  }
-  .avatar-gear-bg-opp {
-    animation: spinGearBgOpp 15s infinite linear;
-  }
-  @keyframes spinGearBg {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  @keyframes spinGearBgOpp {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
+  .banner-mini-duel.slide-in .mini-vs-text.visible {
+    transform: scale(1);
+    opacity: 1;
   }
 
   /* ─── VS BADGE AND OVERLAY TEXT ─── */
@@ -703,70 +726,6 @@
   @keyframes fightPulse {
     0% { transform: scale(1); }
     100% { transform: scale(1.1); text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 50px rgba(255, 74, 74, 0.6); }
-  }
-
-  /* ─── MOBILE AVATARS ROW ─── */
-  .mobile-avatar-row {
-    display: none;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 5;
-    width: 100%;
-    overflow: hidden;
-    padding: 10px 0;
-  }
-  .mob-avatar-wrapper {
-    width: 70px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-    opacity: 0;
-  }
-  .mob-avatar-wrapper:first-child {
-    transform: translateX(-100px);
-  }
-  .mob-avatar-wrapper:first-child.slide-in {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  .mob-avatar-wrapper:last-child {
-    transform: translateX(100px);
-  }
-  .mob-avatar-wrapper:last-child.slide-in {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  .mob-avatar-img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 2px solid rgba(74, 184, 240, 0.8);
-    box-shadow: 0 0 12px rgba(74, 184, 240, 0.4);
-    background: rgba(13, 30, 54, 0.8);
-    object-fit: contain;
-    padding: 3px;
-  }
-  .mob-avatar-wrapper:last-child .mob-avatar-img {
-    border-color: rgba(255, 74, 74, 0.8);
-    box-shadow: 0 0 12px rgba(255, 74, 74, 0.4);
-  }
-  .mob-vs-text {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: #ff4a4a;
-    text-shadow: 0 0 10px rgba(255, 74, 74, 0.8);
-    transition: all 0.4s ease;
-    transform: scale(0);
-    opacity: 0;
-  }
-  .mob-vs-text.visible {
-    transform: scale(1);
-    opacity: 1;
   }
   .duel-banner-content-inner h3 {
     font-size: 2.4rem;
@@ -882,28 +841,28 @@
   <!-- LIVE DUEL BANNER -->
   <div class="duel-banner-card">
     
-    <!-- DESKTOP LEFT AVATAR -->
-    <div id="banner-avatar-left" class="banner-avatar-wrapper left-side">
-      <div class="avatar-gear-bg"></div>
-      <img id="banner-avatar-left-img" class="banner-avatar-img" src="avatars/a-1.png" alt="Player 1">
-      <span class="avatar-name" id="banner-avatar-left-name">SEN</span>
-    </div>
-
-    <!-- DESKTOP RIGHT AVATAR -->
-    <div id="banner-avatar-right" class="banner-avatar-wrapper right-side">
-      <div class="avatar-gear-bg-opp"></div>
-      <img id="banner-avatar-right-img" class="banner-avatar-img" src="avatars/a2.png" alt="Player 2">
-      <span class="avatar-name" id="banner-avatar-right-name">RAKİP</span>
-    </div>
-
-    <!-- MOBILE AVATAR ROW -->
-    <div class="mobile-avatar-row">
-      <div id="mob-avatar-left" class="mob-avatar-wrapper">
-        <img id="mob-avatar-left-img" class="mob-avatar-img" src="avatars/a-1.png" alt="Player 1">
+    <!-- MINI DUELS WRAPPER -->
+    <div class="banner-duels-wrapper">
+      <!-- LEFT MINI DUEL -->
+      <div id="banner-mini-duel-left" class="banner-mini-duel left-side">
+        <div class="mini-avatar-wrapper left-left">
+          <img id="avatar-ll-img" class="mini-avatar-img" src="avatars/a-1.png" alt="Player LL">
+        </div>
+        <div id="vs-left" class="mini-vs-text">VS</div>
+        <div class="mini-avatar-wrapper left-right">
+          <img id="avatar-lr-img" class="mini-avatar-img" src="avatars/a2.png" alt="Player LR">
+        </div>
       </div>
-      <div id="mob-vs-badge" class="mob-vs-text">VS</div>
-      <div id="mob-avatar-right" class="mob-avatar-wrapper">
-        <img id="mob-avatar-right-img" class="mob-avatar-img" src="avatars/a2.png" alt="Player 2">
+      
+      <!-- RIGHT MINI DUEL -->
+      <div id="banner-mini-duel-right" class="banner-mini-duel right-side">
+        <div class="mini-avatar-wrapper right-left">
+          <img id="avatar-rl-img" class="mini-avatar-img" src="avatars/a3.png" alt="Player RL">
+        </div>
+        <div id="vs-right" class="mini-vs-text">VS</div>
+        <div class="mini-avatar-wrapper right-right">
+          <img id="avatar-rr-img" class="mini-avatar-img" src="avatars/a4.png" alt="Player RR">
+        </div>
       </div>
     </div>
 
@@ -1669,51 +1628,49 @@
       'a59.png', 'a61.png', 'a62.png', 'a63.png', 'a64.png', 'a65.png', 'a69.png'
     ];
 
-    const leftAvatarImg = document.getElementById('banner-avatar-left-img');
-    const rightAvatarImg = document.getElementById('banner-avatar-right-img');
-    const leftAvatarContainer = document.getElementById('banner-avatar-left');
-    const rightAvatarContainer = document.getElementById('banner-avatar-right');
-    const vsBadge = document.getElementById('banner-vs-badge');
+    const miniDuelLeft = document.getElementById('banner-mini-duel-left');
+    const miniDuelRight = document.getElementById('banner-mini-duel-right');
+    const vsLeft = document.getElementById('vs-left');
+    const vsRight = document.getElementById('vs-right');
     const fightText = document.getElementById('banner-fight-text');
 
-    const leftAvatarImgMob = document.getElementById('mob-avatar-left-img');
-    const rightAvatarImgMob = document.getElementById('mob-avatar-right-img');
-    const leftAvatarContainerMob = document.getElementById('mob-avatar-left');
-    const rightAvatarContainerMob = document.getElementById('mob-avatar-right');
-    const vsBadgeMob = document.getElementById('mob-vs-badge');
-
     function triggerDuel() {
-      const randomLeft = avatarList[Math.floor(Math.random() * avatarList.length)];
-      let randomRight = avatarList[Math.floor(Math.random() * avatarList.length)];
-      while (randomRight === randomLeft) {
-        randomRight = avatarList[Math.floor(Math.random() * avatarList.length)];
+      // Select 4 unique random avatars
+      const chosen = [];
+      while (chosen.length < 4) {
+        const rand = avatarList[Math.floor(Math.random() * avatarList.length)];
+        if (!chosen.includes(rand)) {
+          chosen.push(rand);
+        }
       }
+      const [avatarLL, avatarLR, avatarRL, avatarRR] = chosen;
 
       // 1. Reset to slide-out state
-      if (leftAvatarContainer) leftAvatarContainer.classList.remove('slide-in');
-      if (rightAvatarContainer) rightAvatarContainer.classList.remove('slide-in');
-      if (leftAvatarContainerMob) leftAvatarContainerMob.classList.remove('slide-in');
-      if (rightAvatarContainerMob) rightAvatarContainerMob.classList.remove('slide-in');
-      if (vsBadge) vsBadge.classList.remove('visible');
-      if (vsBadgeMob) vsBadgeMob.classList.remove('visible');
+      if (miniDuelLeft) miniDuelLeft.classList.remove('slide-in');
+      if (miniDuelRight) miniDuelRight.classList.remove('slide-in');
+      if (vsLeft) vsLeft.classList.remove('visible');
+      if (vsRight) vsRight.classList.remove('visible');
       if (fightText) fightText.classList.remove('visible');
 
       // 2. Load images and trigger slide-in after tiny delay
       setTimeout(() => {
-        if (leftAvatarImg) leftAvatarImg.src = `avatars/${randomLeft}`;
-        if (rightAvatarImg) rightAvatarImg.src = `avatars/${randomRight}`;
-        if (leftAvatarImgMob) leftAvatarImgMob.src = `avatars/${randomLeft}`;
-        if (rightAvatarImgMob) rightAvatarImgMob.src = `avatars/${randomRight}`;
+        const imgLL = document.getElementById('avatar-ll-img');
+        const imgLR = document.getElementById('avatar-lr-img');
+        const imgRL = document.getElementById('avatar-rl-img');
+        const imgRR = document.getElementById('avatar-rr-img');
 
-        if (leftAvatarContainer) leftAvatarContainer.classList.add('slide-in');
-        if (rightAvatarContainer) rightAvatarContainer.classList.add('slide-in');
-        if (leftAvatarContainerMob) leftAvatarContainerMob.classList.add('slide-in');
-        if (rightAvatarContainerMob) rightAvatarContainerMob.classList.add('slide-in');
+        if (imgLL) imgLL.src = `avatars/${avatarLL}`;
+        if (imgLR) imgLR.src = `avatars/${avatarLR}`;
+        if (imgRL) imgRL.src = `avatars/${avatarRL}`;
+        if (imgRR) imgRR.src = `avatars/${avatarRR}`;
 
-        // VS badge appears after 0.35s
+        if (miniDuelLeft) miniDuelLeft.classList.add('slide-in');
+        if (miniDuelRight) miniDuelRight.classList.add('slide-in');
+
+        // VS badges appear after 0.35s
         setTimeout(() => {
-          if (vsBadge) vsBadge.classList.add('visible');
-          if (vsBadgeMob) vsBadgeMob.classList.add('visible');
+          if (vsLeft) vsLeft.classList.add('visible');
+          if (vsRight) vsRight.classList.add('visible');
         }, 350);
 
         // FIGHT text overlay appears after 1.8s
@@ -1765,11 +1722,7 @@
       document.getElementById('duel-banner-highlight').textContent = 'En iyi kim? Sen mi, arkadaşın mı? Artık tahminleri bırak, Gerçek Zamanlı Düello sistemiyle sahneye çık!';
       document.getElementById('duel-banner-desc').textContent = 'Arkadaşlarını canlı mücadeleye davet et, zekanı konuştur ve rekabetin tadını çıkar. Sınırları aşmak istersen, küresel şampiyonada tüm dünyaya meydan oku! Eğlenceyi stratejiyle birleştir, skor tablosunun zirvesine yerleş ve şampiyonluğunu ilan et.';
       document.getElementById('duel-cta-btn').textContent = 'Hemen Gear Blast\'a gir, düelloyu başlat!';
-      const leftName = document.getElementById('banner-avatar-left-name');
-      const rightName = document.getElementById('banner-avatar-right-name');
       const fightText = document.getElementById('banner-fight-text');
-      if (leftName) leftName.textContent = 'SEN';
-      if (rightName) rightName.textContent = 'RAKİP';
       if (fightText) fightText.textContent = 'DÜELLO!';
     } else {
       btnTr.classList.remove('active');
@@ -1794,11 +1747,7 @@
       document.getElementById('duel-banner-highlight').textContent = 'Who is the best? You or your friend? Stop guessing now, step onto the stage with the Real-Time Duel system!';
       document.getElementById('duel-banner-desc').textContent = 'Invite your friends to live combat, show off your intelligence, and enjoy the competition. If you want to push the boundaries, challenge the whole world in the global championship! Combine fun with strategy, claim the top of the leaderboard, and declare your championship.';
       document.getElementById('duel-cta-btn').textContent = 'Enter Gear Blast now, start the duel!';
-      const leftName = document.getElementById('banner-avatar-left-name');
-      const rightName = document.getElementById('banner-avatar-right-name');
       const fightText = document.getElementById('banner-fight-text');
-      if (leftName) leftName.textContent = 'YOU';
-      if (rightName) rightName.textContent = 'RIVAL';
       if (fightText) fightText.textContent = 'FIGHT!';
     }
   }
